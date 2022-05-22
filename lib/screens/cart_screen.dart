@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hci_customer/models/cart.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hci_customer/widgets/cart_tile.dart';
 
-class CartScreen extends StatelessWidget {
-  var list = cartList;
+class CartScreen extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    print(list.length);
+  Widget build(BuildContext context, WidgetRef ref) {
+    var list = ref.watch(cartListProvider);
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(Icons.menu),
@@ -28,7 +27,7 @@ class CartScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: ListView.builder(
                 itemBuilder: (_, i) {
-                  return CartTile(cartList[i]);
+                  return CartTile(list[i]);
                 },
                 itemCount: list.length,
               ),

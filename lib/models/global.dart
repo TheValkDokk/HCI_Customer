@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hci_customer/widgets/cart_tile.dart';
 
 import '../screens/cart_screen.dart';
 import 'cart.dart';
 import 'drugs.dart';
 
-void showAddedMsg(BuildContext context, Drug drug) {
+void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
   //print(drug.id);
-  if (cartList.isEmpty) {
-    cartList.add(Cart(drug: drug, quantity: 1, price: drug.price));
-  } else if (cartList.isNotEmpty) {
-    for (var e in cartList) {
+  final list = ref.watch(cartListProvider);
+
+  if (list.isEmpty) {
+    list.add(Cart(drug: drug, quantity: 1, price: drug.price));
+  } else if (list.isNotEmpty) {
+    for (var e in list) {
       if (e.drug.id == drug.id) {
-        print('yes');
         e.quantity++;
         e.price = e.quantity * e.drug.price;
         return;
       }
     }
-    cartList.add(Cart(drug: drug, quantity: 1, price: drug.price));
+    ref
+        .read(cartListProvider)
+        .add(Cart(drug: drug, quantity: 1, price: drug.price));
   }
 
   ScaffoldMessenger.of(context).showSnackBar(
