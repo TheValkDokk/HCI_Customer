@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 
 import '../models/cart.dart';
 import '../screens/info.dart';
@@ -7,9 +8,10 @@ import '../screens/info.dart';
 final cartListProvider = StateProvider<List<Cart>>((ref) => cartList);
 
 class CartTile extends StatefulWidget {
-  const CartTile(this._cart);
+  const CartTile(this._cart, this._drawerController);
 
   final Cart _cart;
+  final ZoomDrawerController _drawerController;
 
   @override
   State<CartTile> createState() => _CartTileState();
@@ -39,7 +41,8 @@ class _CartTileState extends State<CartTile> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (ctx) => InfoScreen(widget._cart.drug)));
+                      builder: (ctx) => InfoScreen(
+                          widget._cart.drug, widget._drawerController)));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

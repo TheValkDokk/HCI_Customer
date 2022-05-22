@@ -1,14 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/settings.dart';
 
 import '../models/drugs.dart';
 import '../widgets/product_tile.dart';
 
 class LoadMoreScreen extends StatefulWidget {
-  const LoadMoreScreen({required this.title, required this.list});
+  const LoadMoreScreen(
+      {required this.title,
+      required this.list,
+      required this.drawerController});
   final String title;
   final List<Drug> list;
+  final ZoomDrawerController drawerController;
 
   @override
   State<LoadMoreScreen> createState() => _LoadMoreScreenState();
@@ -44,9 +49,8 @@ class _LoadMoreScreenState extends State<LoadMoreScreen> {
         mainAxisSpacing: 5,
       ),
       itemCount: filterlist.length,
-      itemBuilder: (context, i) => DrugTile(
-        filterlist[i],
-      ),
+      itemBuilder: (context, i) =>
+          DrugTile(filterlist[i], widget.drawerController),
     );
   }
 

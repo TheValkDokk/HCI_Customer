@@ -6,10 +6,12 @@ import '../screens/cart_screen.dart';
 import 'cart.dart';
 import 'drugs.dart';
 
-void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
-  //print(drug.id);
-  final list = ref.watch(cartListProvider);
+final GlobalKey<ScaffoldMessengerState> snackbarKey =
+    GlobalKey<ScaffoldMessengerState>();
 
+void addorInc(Drug drug, WidgetRef ref) {
+  final list = ref.watch(cartListProvider);
+  snackbarKey.currentState?.hideCurrentSnackBar();
   if (list.isEmpty) {
     list.add(Cart(drug: drug, quantity: 1, price: drug.price));
   } else if (list.isNotEmpty) {
@@ -24,15 +26,21 @@ void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
         .read(cartListProvider)
         .add(Cart(drug: drug, quantity: 1, price: drug.price));
   }
+}
 
-  ScaffoldMessenger.of(context).showSnackBar(
+void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref, var drawer) {
+  //print(drug.id);
+
+  addorInc(drug, ref);
+
+  snackbarKey.currentState?.showSnackBar(
     SnackBar(
       action: SnackBarAction(
         label: 'To my Cart',
         onPressed: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CartScreen()));
+          snackbarKey.currentState?.hideCurrentSnackBar();
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CartScreen(drawer)));
         },
         textColor: Colors.cyanAccent,
       ),

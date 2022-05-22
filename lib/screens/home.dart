@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_zoom_drawer/config.dart';
+import 'package:hci_customer/screens/drawer.dart';
 import '../models/drugs.dart';
 import '../widgets/product_tile.dart';
 import 'cart_screen.dart';
 import 'load_more.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen(this._drawerController, this.onSelectedItem);
+
+  final ZoomDrawerController _drawerController;
+  final ValueChanged<MenuItemDra> onSelectedItem;
 
   static const routeName = 'home';
 
@@ -27,15 +31,22 @@ class _HomeScreenState extends State<HomeScreen> {
     var listA2 = listDrug.where((e) => e.type == 'A2').toList();
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.menu),
+        leading: IconButton(
+          onPressed: () => widget._drawerController.toggle!(),
+          icon: const Icon(Icons.menu_rounded),
+        ),
         title: const Text("Pharmacy"),
         centerTitle: true,
         backgroundColor: Colors.green,
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartScreen()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CartScreen(widget._drawerController),
+                  ),
+                );
               },
               icon: const Icon(Icons.shopping_cart))
         ],
@@ -71,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         builder: (context) => LoadMoreScreen(
                           title: 'Unprescribed Drugs',
                           list: listA1,
+                          drawerController: widget._drawerController,
                         ),
                       ),
                     ),
@@ -98,9 +110,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisSpacing: 5,
                     ),
                     itemCount: listA1.length > 4 ? 4 : listA1.length,
-                    itemBuilder: (context, i) => DrugTile(
-                      listA1[i],
-                    ),
+                    itemBuilder: (context, i) =>
+                        DrugTile(listA1[i], widget._drawerController),
                   ),
                   GestureDetector(
                     //Load More Drug by Type
@@ -110,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         builder: (context) => LoadMoreScreen(
                           title: 'Medical Devices',
                           list: listA2,
+                          drawerController: widget._drawerController,
                         ),
                       ),
                     ),
@@ -141,9 +153,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? 4
                             : listA2.length
                         : listA2.length,
-                    itemBuilder: (context, i) => DrugTile(
-                      listA2[i],
-                    ),
+                    itemBuilder: (context, i) =>
+                        DrugTile(listA2[i], widget._drawerController),
                   ),
                 ],
               ),

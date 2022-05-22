@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/screens/info.dart';
 
 import '../models/drugs.dart';
 import '../models/global.dart';
 
 class DrugTile extends ConsumerWidget {
-  const DrugTile(this._drug);
+  const DrugTile(this._drug, this._drawerController);
 
   final Drug _drug;
+  final ZoomDrawerController _drawerController;
 
   static const routeName = '/detail';
 
@@ -21,8 +23,10 @@ class DrugTile extends ConsumerWidget {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (ctx) => InfoScreen(_drug)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (ctx) => InfoScreen(_drug, _drawerController)));
           },
           child: Container(
             width: containerWidth,
@@ -97,7 +101,7 @@ class DrugTile extends ConsumerWidget {
           width: containerWidth,
           child: ElevatedButton(
             onPressed: () {
-              showAddedMsg(context, _drug, ref);
+              showAddedMsg(context, _drug, ref, _drawerController);
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
