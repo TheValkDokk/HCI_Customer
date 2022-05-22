@@ -5,11 +5,16 @@ import '../widgets/product_tile.dart';
 import 'cart_screen.dart';
 import 'load_more.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   static const routeName = 'home';
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -35,6 +40,7 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.shopping_cart))
         ],
       ),
+      // drawer: ,
       body: SingleChildScrollView(
         child: Column(
           children: [

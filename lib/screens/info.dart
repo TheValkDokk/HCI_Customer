@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hci_customer/screens/home.dart';
 
 import '../models/drugs.dart';
@@ -6,12 +7,12 @@ import '../models/global.dart';
 import '../widgets/product_tile.dart';
 import 'cart_screen.dart';
 
-class InfoScreen extends StatelessWidget {
+class InfoScreen extends ConsumerWidget {
   const InfoScreen(this._drug);
   final Drug _drug;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.of(context).size;
     bool isPhone = size.shortestSide < 650 ? true : false;
     var list = listDrug.where((e) => e.type == _drug.type).toList();
@@ -87,7 +88,7 @@ class InfoScreen extends StatelessWidget {
             width: size.width * 0.9,
             child: ElevatedButton(
               onPressed: () {
-                showAddedMsg(context, _drug);
+                showAddedMsg(context, _drug, ref);
               },
               style: ElevatedButton.styleFrom(
                   side: const BorderSide(color: Colors.green),
