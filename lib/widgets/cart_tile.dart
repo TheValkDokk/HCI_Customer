@@ -21,11 +21,6 @@ class _CartTileState extends State<CartTile> {
   var countController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     countController.text = widget._cart.quantity.toString();
     Size size = MediaQuery.of(context).size;

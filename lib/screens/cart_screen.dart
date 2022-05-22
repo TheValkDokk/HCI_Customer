@@ -10,6 +10,10 @@ class CartScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var list = ref.watch(cartListProvider);
+    double price = 0;
+    for (var e in list) {
+      price += e.price;
+    }
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -29,11 +33,39 @@ class CartScreen extends ConsumerWidget {
           ? const Center(
               child: Text("Your cart is Empty"),
             )
-          : ListView.builder(
-              itemBuilder: (_, i) {
-                return CartTile(list[i], _drawerController);
-              },
-              itemCount: list.length,
+          : Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: ListView.builder(
+                    itemBuilder: (_, i) {
+                      return CartTile(list[i], _drawerController);
+                    },
+                    itemCount: list.length,
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              "Total Price: ",
+                              style: TextStyle(letterSpacing: 1, fontSize: 18),
+                            ),
+                            Text(
+                              price.toString(),
+                              style: const TextStyle(
+                                  letterSpacing: 1, fontSize: 18),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
     );
   }

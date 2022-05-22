@@ -54,19 +54,10 @@ class AboutScreen extends StatelessWidget {
             icon: const Icon(Icons.menu_rounded),
             onPressed: () => ZoomDrawer.of(context)!.toggle(),
           )),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 180),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.black)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [...MyTeam.all.map(printMember).toList()],
-            ),
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [...MyTeam.all.map(printMember).toList()],
         ),
       ),
     );
@@ -75,14 +66,21 @@ class AboutScreen extends StatelessWidget {
   Widget printMember(AboutUs u) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ListTile(
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: CircleAvatar(
-            child: Image.network(u.url),
+      child: Container(
+        width: 300,
+        decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.black)),
+        child: ListTile(
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: CircleAvatar(
+              child: Image.network(u.url),
+            ),
           ),
+          title: Text(u.name),
         ),
-        title: Text(u.name),
       ),
     );
   }
