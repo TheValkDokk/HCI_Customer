@@ -28,7 +28,7 @@ class DrawerScreen extends StatelessWidget {
     return Theme(
       data: ThemeData.dark(),
       child: Scaffold(
-        backgroundColor: Colors.green.shade400,
+        backgroundColor: Colors.transparent,
         body: SafeArea(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

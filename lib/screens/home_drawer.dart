@@ -21,18 +21,21 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return ZoomDrawer(
-      slideWidth: MediaQuery.of(context).size.width * 0.7,
-      controller: _drawerController,
-      borderRadius: 24.0,
-      showShadow: true,
-      angle: -12.0,
-      drawerShadowsBackgroundColor: Colors.green,
-      openCurve: Curves.fastOutSlowIn,
-      mainScreen: getScreen(),
-      menuScreen: DrawerScreen(
-        currentItem: currentItem,
-        onSelectedItem: (item) => changeScreen(item),
+    return Container(
+      color: Colors.green.shade400,
+      child: ZoomDrawer(
+        slideWidth: MediaQuery.of(context).size.width * 0.7,
+        controller: _drawerController,
+        borderRadius: 24.0,
+        showShadow: true,
+        angle: -12.0,
+        drawerShadowsBackgroundColor: Colors.green,
+        openCurve: Curves.fastOutSlowIn,
+        mainScreen: getScreen(),
+        menuScreen: DrawerScreen(
+          currentItem: currentItem,
+          onSelectedItem: (item) => changeScreen(item),
+        ),
       ),
     );
   }
