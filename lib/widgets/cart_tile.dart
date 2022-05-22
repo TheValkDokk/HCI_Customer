@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/cart.dart';
 import '../screens/info.dart';
+
+final cartListProvider = StateProvider<List<Cart>>((ref) => cartList);
 
 class CartTile extends StatefulWidget {
   const CartTile(this._cart);
