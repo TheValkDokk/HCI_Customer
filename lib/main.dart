@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/screens/payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'models/global.dart';
-import 'screens/home.dart';
 import 'screens/home_drawer.dart';
 
 void main() => runApp(ProviderScope(child: MyApp()));
@@ -11,13 +10,13 @@ void main() => runApp(ProviderScope(child: MyApp()));
 class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
+  late final ZoomDrawerController drawerController;
 }
 
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      scaffoldMessengerKey: snackbarKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -29,9 +28,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         PaymentScreen.routeName: (context) => const PaymentScreen(),
       },
-      initialRoute: HomeScreen.routeName,
-      title: 'Material App',
-      home: HomeDrawer(),
+      home: const HomeDrawer(),
     );
   }
 }

@@ -56,7 +56,7 @@ final List<Drug> listDrug = [
     fullName:
         'Coldacmin Flu hộp 100 viên trị các triệu chứng cảm lạnh, cảm cúm',
     id: 'D02',
-    unit: 'hộp',
+    unit: 'Hộp',
     price: 30.000,
     ingredients:
         'Mỗi 5 ml siro chứa: Hoạt chất: Paracetamol 120 mg, Phenylephrin HCl 5 mg, Chlorpheniramin maleat 1 mg. Tá dược: Glycerin, natri saccharin, màu đỏ số 40',
@@ -73,7 +73,7 @@ final List<Drug> listDrug = [
     fullName:
         'Soscough hộp 30 viên điều trị ho do họng và phế quản bị kích thích',
     id: 'D03',
-    unit: 'hộp',
+    unit: 'Hộp',
     ingredients:
         'Mỗi 5 ml siro chứa: Hoạt chất: Paracetamol 120 mg, Phenylephrin HCl 5 mg, Chlorpheniramin maleat 1 mg. Tá dược: Glycerin, natri saccharin, màu đỏ số 40',
     uses:
@@ -93,7 +93,7 @@ final List<Drug> listDrug = [
     title: 'Giloba cải thiện trí nhớ, tuần hoàn máu não',
     fullName: 'Giloba 40mg hộp 30 viên cải thiện trí nhớ, tuần hoàn máu não',
     id: 'D04',
-    unit: 'hộp',
+    unit: 'Hộp',
     price: 115.000,
     imgUrl:
         'https://cdn.thegioididong.com/Products/Images/10033/131220/giloba-40mg-2-1-700x467.jpg',
@@ -110,7 +110,7 @@ final List<Drug> listDrug = [
     fullName:
         'Viên dầu tỏi UBB Garlic Oil trợ tiêu hóa, ngừa cảm cúm hộp 100 viên',
     id: 'D05',
-    unit: 'chai',
+    unit: 'Chai',
     price: 180.000,
     imgUrl:
         'https://cdn.thegioididong.com/Products/Images/7016/131210/garlic-oil-ubb-100v-2-1-700x467.jpg',
@@ -126,7 +126,7 @@ final List<Drug> listDrug = [
     title: 'Kehl điều trị, giải độc bệnh gan',
     fullName: 'Kehl hộp 60 viên hỗ trợ điều trị bệnh gan, giải độc gan, bổ gan',
     id: 'D06',
-    unit: 'hộp',
+    unit: 'Hộp',
     price: 150.000,
     imgUrl:
         'https://cdn.thegioididong.com/Products/Images/7027/200632/thuoc-ho-tro-dieu-tri-cac-benh-ly-ve-gan-kehl-60-v-2-700x467.jpg',
@@ -143,7 +143,7 @@ final List<Drug> listDrug = [
     title: 'Khẩu trang y tế HQGano 4 lớp',
     fullName: 'Khẩu trang y tế HQGano 4 lớp màu trắng kháng khuẩn hộp 30 chiếc',
     id: 'D11',
-    unit: 'hộp',
+    unit: 'Hộp',
     price: 85.000,
     imgUrl:
         'https://cdn.thegioididong.com/Products/Images/5872/231731/khau-trang-y-te-hqgano-4-lop-h-30-quai-3d-mac-dinh-2-700x467.jpg',
@@ -160,7 +160,7 @@ final List<Drug> listDrug = [
     fullName:
         'Nhiệt kế điện tử đo tai chuẩn đoán nhanh và chính xác Omron TH398S',
     id: 'D12',
-    unit: 'cái',
+    unit: 'Cái',
     price: 790.000,
     imgUrl:
         'https://cdn.thegioididong.com/Products/Images/9922/184379/nhiet-ke-do-tai-omron-th839s-2-700x467.jpg',
@@ -176,7 +176,7 @@ final List<Drug> listDrug = [
     title: 'Vớ đùi y khoa Medi Duomed size M',
     fullName: 'Vớ đùi y khoa Medi Duomed size M hỗ trợ trị suy giãn tĩnh mạch',
     id: 'D13',
-    unit: 'hộp',
+    unit: 'Hộp',
     price: 930.000,
     imgUrl:
         'https://cdn.thegioididong.com/Products/Images/9922/195794/vo-y-khoa-ho-tro-dieu-tri-gian-tinh-mach-dui-m-2-1-700x467.jpg',
@@ -192,7 +192,7 @@ final List<Drug> listDrug = [
     title: 'Đai băng vải Vantelin Back Support size M',
     fullName: 'Đai băng vải Vantelin Back Support size M dùng bảo vệ cột sống',
     id: 'D16',
-    unit: 'hộp',
+    unit: 'Hộp',
     price: 750.000,
     imgUrl:
         'https://cdn.thegioididong.com/Products/Images/9922/221055/vantelin-back-support-size-m-2-700x467.jpg',
@@ -209,7 +209,7 @@ final List<Drug> listDrug = [
     fullName:
         'Bao đeo đầu gối đàn hồi Dr. Med DR-K021 size M phòng chấn thương',
     id: 'D17',
-    unit: 'hộp',
+    unit: 'Hộp',
     price: 249.000,
     imgUrl:
         'https://cdn.thegioididong.com/Products/Images/9922/276346/bao-deo-dau-goi-dr-med-dr-k021-size-m-1-700x467.jpg',
@@ -226,7 +226,7 @@ final List<Drug> listDrug = [
     fullName:
         'Que thử đường huyết cho kết quả nhanh Accu-Chek Active hộp 25 que',
     id: 'D06',
-    unit: 'hộp',
+    unit: 'Hộp',
     price: 150.000,
     imgUrl:
         'https://cdn.thegioididong.com/Products/Images/9922/275656/que-thu-duong-huyet-accu-chek-active-25-que-1-700x467.jpg',

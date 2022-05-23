@@ -6,12 +6,9 @@ import '../screens/cart_screen.dart';
 import 'cart.dart';
 import 'drugs.dart';
 
-final GlobalKey<ScaffoldMessengerState> snackbarKey =
-    GlobalKey<ScaffoldMessengerState>();
-
-void addorInc(Drug drug, WidgetRef ref) {
+void addorInc(Drug drug, WidgetRef ref, BuildContext ctx) {
   final list = ref.watch(cartListProvider);
-  snackbarKey.currentState?.hideCurrentSnackBar();
+  ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
   if (list.isEmpty) {
     list.add(Cart(drug: drug, quantity: 1, price: drug.price));
   } else if (list.isNotEmpty) {
@@ -28,19 +25,17 @@ void addorInc(Drug drug, WidgetRef ref) {
   }
 }
 
-void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref, var drawer) {
-  //print(drug.id);
+void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
+  addorInc(drug, ref, context);
 
-  addorInc(drug, ref);
-
-  snackbarKey.currentState?.showSnackBar(
+  ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       action: SnackBarAction(
         label: 'To my Cart',
         onPressed: () {
-          snackbarKey.currentState?.hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CartScreen(drawer)));
+              MaterialPageRoute(builder: (context) => const CartScreen()));
         },
         textColor: Colors.cyanAccent,
       ),

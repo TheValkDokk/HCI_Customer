@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/screens/home.dart';
 
 import '../models/drugs.dart';
@@ -9,9 +8,8 @@ import '../widgets/product_tile.dart';
 import 'cart_screen.dart';
 
 class InfoScreen extends ConsumerWidget {
-  const InfoScreen(this._drug, this._drawerController);
+  const InfoScreen(this._drug);
   final Drug _drug;
-  final ZoomDrawerController _drawerController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +35,7 @@ class InfoScreen extends ConsumerWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CartScreen(_drawerController)));
+                        builder: (context) => const CartScreen()));
               },
               icon: const Icon(Icons.shopping_cart))
         ],
@@ -92,7 +90,11 @@ class InfoScreen extends ConsumerWidget {
             width: size.width * 0.9,
             child: ElevatedButton(
               onPressed: () {
-                showAddedMsg(context, _drug, ref, _drawerController);
+                showAddedMsg(
+                  context,
+                  _drug,
+                  ref,
+                );
               },
               style: ElevatedButton.styleFrom(
                   side: const BorderSide(color: Colors.green),
@@ -154,7 +156,7 @@ class InfoScreen extends ConsumerWidget {
               mainAxisExtent: 250,
             ),
             itemCount: list.length > 4 ? 4 : list.length,
-            itemBuilder: (context, i) => DrugTile(list[i], _drawerController),
+            itemBuilder: (context, i) => DrugTile(list[i]),
           ),
         ],
       )),

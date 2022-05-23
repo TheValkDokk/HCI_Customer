@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_zoom_drawer/config.dart';
 
 import '../models/cart.dart';
 import '../screens/info.dart';
@@ -8,10 +7,9 @@ import '../screens/info.dart';
 final cartListProvider = StateProvider<List<Cart>>((ref) => cartList);
 
 class CartTile extends StatefulWidget {
-  const CartTile(this.index, this._drawerController, this.notifyParent);
+  const CartTile(this.index, this.notifyParent);
 
   final int index;
-  final ZoomDrawerController _drawerController;
   final Function() notifyParent;
 
   @override
@@ -41,11 +39,8 @@ class _CartTileState extends State<CartTile> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (ctx) =>
-                            InfoScreen(cart.drug, widget._drawerController)));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (ctx) => InfoScreen(cart.drug)));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -161,9 +156,16 @@ class _CartTileState extends State<CartTile> {
                   ],
                 ),
                 Text(
+                  cart.drug.unit,
+                  style: const TextStyle(fontSize: 13, letterSpacing: 1),
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                Text(
                   'Total: ${cart.price.toStringAsFixed(3)}',
                   style: const TextStyle(fontSize: 15, letterSpacing: 1),
-                )
+                ),
               ],
             ),
             const Divider()

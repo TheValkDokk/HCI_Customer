@@ -49,8 +49,7 @@ class _LoadMoreScreenState extends State<LoadMoreScreen> {
         mainAxisSpacing: 5,
       ),
       itemCount: filterlist.length,
-      itemBuilder: (context, i) =>
-          DrugTile(filterlist[i], widget.drawerController),
+      itemBuilder: (context, i) => DrugTile(filterlist[i]),
     );
   }
 

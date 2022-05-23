@@ -22,9 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     bool isPhone = size.shortestSide < 650 ? true : false;
-
     //Unprescripted drugs
     var listA1 = listDrug.where((e) => e.type == 'A1').toList();
     //Medical Devices/Equipments
@@ -44,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CartScreen(widget._drawerController),
+                    builder: (context) => const CartScreen(),
                   ),
                 );
               },
@@ -110,8 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisSpacing: 5,
                     ),
                     itemCount: listA1.length > 4 ? 4 : listA1.length,
-                    itemBuilder: (context, i) =>
-                        DrugTile(listA1[i], widget._drawerController),
+                    itemBuilder: (context, i) => DrugTile(listA1[i]),
                   ),
                   GestureDetector(
                     //Load More Drug by Type
@@ -153,8 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? 4
                             : listA2.length
                         : listA2.length,
-                    itemBuilder: (context, i) =>
-                        DrugTile(listA2[i], widget._drawerController),
+                    itemBuilder: (context, i) => DrugTile(listA2[i]),
                   ),
                 ],
               ),
