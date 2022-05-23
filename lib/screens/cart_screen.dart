@@ -20,20 +20,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: BackButton(
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text("Your Cart"),
-        centerTitle: true,
-        backgroundColor: Colors.green,
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.edit),
-          ),
-        ],
-      ),
+      appBar: _CartAppBar(context),
       body: RefreshIndicator(
         key: refreshKey,
         onRefresh: () async {
@@ -50,6 +37,23 @@ class _CartScreenState extends State<CartScreen> {
           },
         ),
       ),
+    );
+  }
+
+  AppBar _CartAppBar(BuildContext context) {
+    return AppBar(
+      leading: BackButton(
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      title: const Text("Your Cart"),
+      centerTitle: true,
+      backgroundColor: Colors.green,
+      actions: [
+        IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.edit),
+        ),
+      ],
     );
   }
 
