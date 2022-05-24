@@ -6,10 +6,7 @@ import '../drawer/my_flutter_app_icons.dart';
 class MenuItemDra {
   final String title;
   final IconData icon;
-  const MenuItemDra(
-    this.title,
-    this.icon,
-  );
+  const MenuItemDra(this.title, this.icon);
 }
 
 class MenuItems {
@@ -67,9 +64,16 @@ class DrawerScreen extends StatelessWidget {
             ),
             const Spacer(flex: 1),
             ...MenuItems.all.map(buildMenuItem).toList(),
-            const Spacer(
-              flex: 2,
-            ),
+            const Spacer(flex: 2),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: ListTile(
+                onTap: () {},
+                minLeadingWidth: 20,
+                leading: const Icon(Icons.logout),
+                title: const Text("Logout"),
+              ),
+            )
           ],
         )),
       ),

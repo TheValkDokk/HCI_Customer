@@ -24,11 +24,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
     return Container(
       color: Colors.green.shade400,
       child: ZoomDrawer(
+        style: DrawerStyle.defaultStyle,
         slideWidth: MediaQuery.of(context).size.width * 0.7,
         controller: _drawerController,
         borderRadius: 24.0,
         showShadow: true,
-        angle: -12.0,
+        mainScreenTapClose: true,
+        androidCloseOnBackTap: true,
         drawerShadowsBackgroundColor: Colors.green,
         openCurve: Curves.fastOutSlowIn,
         mainScreen: getScreen(),

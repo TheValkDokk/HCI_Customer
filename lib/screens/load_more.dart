@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/settings.dart';
 
@@ -40,16 +41,40 @@ class _LoadMoreScreenState extends State<LoadMoreScreen> {
     }
   }
 
-  GridView gridBuilder(Size size) {
-    return GridView.builder(
-      shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: (size.width / 300).ceil(),
-        mainAxisExtent: 256,
-        mainAxisSpacing: 5,
+  Widget gridBuilder(Size size) {
+    // return GridView.builder(
+    //   shrinkWrap: true,
+    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    //     crossAxisCount: (size.width / 300).ceil(),
+    //     mainAxisExtent: 256,
+    //     mainAxisSpacing: 5,
+    //   ),
+    //   itemCount: filterlist.length,
+    //   itemBuilder: (context, i) => DrugTile(filterlist[i]),
+    // );
+    int count = (size.width / 300).ceil();
+    return AnimationLimiter(
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: count,
+          mainAxisExtent: 256,
+          mainAxisSpacing: 5,
+        ),
+        itemCount: filterlist.length,
+        itemBuilder: (context, i) {
+          return AnimationConfiguration.staggeredGrid(
+            position: i,
+            columnCount: count,
+            duration: const Duration(milliseconds: 700),
+            child: ScaleAnimation(
+              child: FadeInAnimation(
+                child: DrugTile(filterlist[i]),
+              ),
+            ),
+          );
+        },
       ),
-      itemCount: filterlist.length,
-      itemBuilder: (context, i) => DrugTile(filterlist[i]),
     );
   }
 
