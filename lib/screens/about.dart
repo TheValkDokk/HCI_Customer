@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
+import '../widgets/flip_stock.dart';
+
 class AboutUs {
   final String name;
   final String url;
@@ -65,9 +67,9 @@ class AboutScreen extends StatelessWidget {
 
   Widget printMember(AboutUs u) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(10),
       child: Container(
-        width: 300,
+        width: 400,
         decoration: BoxDecoration(
             color: Colors.grey.shade200,
             borderRadius: BorderRadius.circular(20),
@@ -76,7 +78,15 @@ class AboutScreen extends StatelessWidget {
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: CircleAvatar(
-              child: Image.network(u.url),
+              child: Image.network(
+                u.url,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const Center(
+                    child: FlipStock(),
+                  );
+                },
+              ),
             ),
           ),
           title: Text(u.name),

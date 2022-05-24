@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/screens/drawer.dart';
+import '../models/category.dart';
 import '../models/drugs.dart';
+import '../widgets/flip_stock.dart';
 import '../widgets/smallGrid.dart';
 import 'cart_screen.dart';
 import 'load_more.dart';
@@ -84,14 +86,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   GestureDetector _toLoadMoreScreen(
-      BuildContext context, List<Drug> listA1, String title) {
+      BuildContext context, List<Drug> list, String title) {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => LoadMoreScreen(
             title: title,
-            list: listA1,
+            list: list,
             drawerController: widget._drawerController,
           ),
         ),
@@ -101,58 +103,72 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
-          Icon(Icons.chevron_right)
+          const Icon(Icons.chevron_right)
         ],
       ),
     );
   }
 
   Padding _WidgetBtnGroup(bool isPhone, BuildContext context) {
-    List<IconData> iconList = [
-      Icons.ad_units,
-      Icons.access_alarm,
-      Icons.account_balance,
-      Icons.yard_outlined,
-      Icons.wordpress
-    ];
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: Wrap(
         alignment: WrapAlignment.center,
-        spacing: isPhone ? 10 : 30,
+        spacing: isPhone ? 10 : MediaQuery.of(context).size.width * 0.02,
+        // spacing: MediaQuery.of(context).size.width * 0.02,
         children: [...iconList.map((e) => btnDrug(context, e)).toList()],
       ),
     );
   }
 
-  Widget btnDrug(BuildContext ctx, var icon) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(50),
-              ),
-              color: Colors.grey.shade100,
-              border: Border.all(color: Colors.lightGreen),
-              boxShadow: const [
-                BoxShadow(color: Colors.white),
-              ],
-            ),
-            child: Icon(
-              icon,
-              color: Colors.green,
-              size: 30,
-            ),
+  List<Drug> getType(String type) {
+    return listDrug.where((e) => e.type == type).toList();
+  }
+
+  Widget btnDrug(BuildContext ctx, Category cat) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoadMoreScreen(
+            title: cat.title,
+            list: getType(cat.type),
+            drawerController: widget._drawerController,
           ),
         ),
-      ],
+      ),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.17,
+        child: Flexible(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: ClipRRect(
+                  child: Image.network(
+                    cat.url,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                        child: FlipStock(),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                cat.title,
+                maxLines: 2,
+                style: const TextStyle(wordSpacing: 1, fontSize: 12.5),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

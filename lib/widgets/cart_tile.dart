@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/cart.dart';
 import '../screens/info.dart';
+import 'flip_stock.dart';
 
 final cartListProvider = StateProvider<List<Cart>>((ref) => cartList);
 
@@ -53,6 +54,12 @@ class _CartTileState extends State<CartTile> {
                         width: size.width * 0.4,
                         cart.drug.imgUrl,
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                            child: FlipStock(),
+                          );
+                        },
                       ),
                     ),
                   ),

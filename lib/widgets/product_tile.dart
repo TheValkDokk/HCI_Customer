@@ -93,7 +93,7 @@ class DrugTile extends ConsumerWidget {
           height: 8,
         ),
         SizedBox(
-          height: size.height * 0.06,
+          height: size.height * 0.05,
           width: containerWidth,
           child: ElevatedButton(
             onPressed: () {

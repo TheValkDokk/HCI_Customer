@@ -16,9 +16,7 @@ class InfoScreen extends ConsumerWidget {
     Size size = MediaQuery.of(context).size;
     bool isPhone = size.shortestSide < 650 ? true : false;
     var list = listDrug.where((e) => e.type == _drug.type).toList();
-    list.removeWhere(
-      (e) => e.id == _drug.id,
-    );
+    list.removeWhere((e) => e.id == _drug.id);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: () {
@@ -77,7 +75,14 @@ class InfoScreen extends ConsumerWidget {
             width: size.width * 0.9,
             height: size.height * 0.06,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                addorInc(_drug, ref, context);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CartScreen()));
+              },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.green)),
               child: const Text(
