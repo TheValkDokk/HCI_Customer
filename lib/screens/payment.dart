@@ -4,7 +4,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart' as it;
 
 import '../models/cart.dart';
-import '../widgets/cart_tile.dart';
 
 class PaymentScreen extends ConsumerStatefulWidget {
   const PaymentScreen();
@@ -27,7 +26,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var cartL = ref.watch(cartListProvider);
+    var cartL = ref.watch(cartLProvider);
     print("object");
     price = 0;
     for (var element in cartL) {
@@ -195,7 +194,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 const Divider(),
                 Consumer(
                   builder: ((context, ref, child) {
-                    var list = ref.watch(cartListProvider);
+                    var list = ref.watch(cartLProvider);
                     price = calcTotal(list);
                     return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),

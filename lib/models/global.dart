@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hci_customer/widgets/cart_tile.dart';
 
 import '../screens/cart_screen.dart';
 import 'cart.dart';
 import 'drugs.dart';
 
 void addorInc(Drug drug, WidgetRef ref, BuildContext ctx) {
-  final list = ref.watch(cartListProvider);
+  final list = ref.watch(cartLProvider);
   ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
   if (list.isEmpty) {
     list.add(Cart(drug: drug, quantity: 1, price: drug.price));
@@ -20,7 +19,8 @@ void addorInc(Drug drug, WidgetRef ref, BuildContext ctx) {
       }
     }
     ref
-        .read(cartListProvider)
+        .read(cartLProvider.notifier)
+        .state
         .add(Cart(drug: drug, quantity: 1, price: drug.price));
   }
 }

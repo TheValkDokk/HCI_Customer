@@ -5,37 +5,30 @@ import '../models/cart.dart';
 import '../screens/info.dart';
 import 'flip_stock.dart';
 
-final cartListProvider = StateProvider<List<Cart>>((ref) => cartList);
-
-class CartTile extends StatefulWidget {
-  const CartTile(this.index, this.notifyParent);
+class CartTile extends ConsumerStatefulWidget {
+  const CartTile(this.index);
 
   final int index;
-  final Function() notifyParent;
 
   @override
-  State<CartTile> createState() => _CartTileState();
+  ConsumerState<CartTile> createState() => _CartTileState();
 }
 
-class _CartTileState extends State<CartTile> {
+class _CartTileState extends ConsumerState<CartTile> {
   var countController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    var cart = ref.watch(cartLProvider).elementAt(widget.index);
+
+    countController.text =
+        ref.watch(cartLProvider).elementAt(widget.index).quantity.toString();
     Size size = MediaQuery.of(context).size;
     return Container(
-      height: size.height * 0.2,
-      width: size.width,
-      color: Colors.white,
-      child: Consumer(builder: (context, ref, child) {
-        var cart = ref.watch(cartListProvider).elementAt(widget.index);
-        countController.text = cart.quantity.toString();
-        return Column(
+        height: size.height * 0.2,
+        width: size.width,
+        color: Colors.white,
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             GestureDetector(
@@ -100,15 +93,7 @@ class _CartTileState extends State<CartTile> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          setState(() {
-                            cart.quantity++;
-                            if (cart.quantity == 0) {
-                              ref.watch(cartListProvider).remove(cart);
-                            } else {
-                              cart.price = cart.quantity * cart.drug.price;
-                            }
-                            widget.notifyParent();
-                          });
+                          ref.read(cartLProvider.notifier).inQuan(widget.index);
                         },
                         icon: const Icon(
                           Icons.add_circle_outlined,
@@ -119,15 +104,11 @@ class _CartTileState extends State<CartTile> {
                       width: 50,
                       height: 50,
                       child: TextField(
-                        onSubmitted: (value) => setState(() {
-                          cart.quantity = int.parse(value);
-                          if (cart.quantity <= 0) {
-                            ref.watch(cartListProvider).remove(cart);
-                          } else {
-                            cart.price = cart.quantity * cart.drug.price;
-                          }
-                          widget.notifyParent();
-                        }),
+                        onSubmitted: (value) {
+                          ref
+                              .read(cartLProvider.notifier)
+                              .setQuan(widget.index, int.parse(value));
+                        },
                         textAlign: TextAlign.center,
                         controller: countController,
                         keyboardType: TextInputType.number,
@@ -143,19 +124,9 @@ class _CartTileState extends State<CartTile> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () {
-                          setState(
-                            () {
-                              cart.quantity--;
-                              if (cart.quantity == 0) {
-                                ref.watch(cartListProvider).remove(cart);
-                              } else {
-                                cart.price = cart.quantity * cart.drug.price;
-                              }
-                              widget.notifyParent();
-                            },
-                          );
-                        },
+                        onPressed: () => ref
+                            .read(cartLProvider.notifier)
+                            .deQuan(widget.index),
                         icon: const Icon(
                           Icons.remove_circle_outlined,
                           color: Colors.green,
@@ -170,15 +141,13 @@ class _CartTileState extends State<CartTile> {
                   width: 30,
                 ),
                 Text(
-                  'Total: ${cart.price.toStringAsFixed(3)}',
+                  'Total: ${ref.watch(cartLProvider).elementAt(widget.index).price.toStringAsFixed(3)}',
                   style: const TextStyle(fontSize: 15, letterSpacing: 1),
                 ),
               ],
             ),
             const Divider()
           ],
-        );
-      }),
-    );
+        ));
   }
 }

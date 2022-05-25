@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hci_customer/models/cart.dart';
 import 'package:hci_customer/screens/payment.dart';
-import 'package:hci_customer/widgets/cart_tile.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+
+import '../widgets/cart_tile.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen();
@@ -28,7 +30,7 @@ class _CartScreenState extends State<CartScreen> {
         },
         child: Consumer(
           builder: (context, ref, child) {
-            var list = ref.watch(cartListProvider);
+            var list = ref.watch(cartLProvider);
             return list.isEmpty
                 ? const Center(
                     child: Text("Your cart is Empty"),
@@ -63,34 +65,44 @@ class _CartScreenState extends State<CartScreen> {
 
   Column buildCartList(BuildContext context, List<Cart> list, WidgetRef ref) {
     double price = 0;
-    ref.watch(cartListProvider).forEach((e) => price += e.price);
+    ref.watch(cartLProvider).forEach((e) => price += e.price);
     var formatter = NumberFormat('#,###');
     return Column(
       children: [
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.75,
-          child: ListView.builder(
-            itemBuilder: (_, i) {
-              return Slidable(
-                  endActionPane: ActionPane(
-                    motion: const DrawerMotion(),
-                    children: [
-                      SlidableAction(
-                        onPressed: (context) {
-                          setState(() {
-                            list.removeAt(i);
-                          });
-                        },
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        icon: Icons.delete,
-                        label: 'Remove',
-                      )
-                    ],
+          child: AnimationLimiter(
+            child: ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (_, i) {
+                return AnimationConfiguration.staggeredGrid(
+                  position: i,
+                  columnCount: list.length,
+                  duration: const Duration(milliseconds: 1000),
+                  child: ScaleAnimation(
+                    child: Slidable(
+                      endActionPane: ActionPane(
+                        motion: const DrawerMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              setState(() {
+                                list.removeAt(i);
+                              });
+                            },
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: 'Remove',
+                          )
+                        ],
+                      ),
+                      child: CartTile(i),
+                    ),
                   ),
-                  child: CartTile(i, refresh));
-            },
-            itemCount: list.length,
+                );
+              },
+            ),
           ),
         ),
         list.isEmpty

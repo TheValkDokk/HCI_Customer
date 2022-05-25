@@ -157,6 +157,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
+                  // child: CachedNetworkImage(
+                  //   imageUrl: cat.url,
+                  //   placeholder: (context, url) => const FlipStock(),
+                  //   errorWidget: (context, url, error) =>
+                  //       const Icon(Icons.error),
+                  // ),
                 ),
               ),
               Text(

@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   assorted_layout_widgets: ^6.0.0
+  cached_network_image: ^3.2.1
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
@@ -64,7 +65,6 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-
   fonts:
     - family: MyFlutterApp
       fonts:
