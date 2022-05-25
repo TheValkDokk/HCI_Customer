@@ -50,17 +50,7 @@ class _CartScreenState extends State<CartScreen> {
       title: const Text("Your Cart"),
       centerTitle: true,
       backgroundColor: Colors.green,
-      actions: [
-        IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.edit),
-        ),
-      ],
     );
-  }
-
-  refresh() {
-    setState(() {});
   }
 
   Column buildCartList(BuildContext context, List<Cart> list, WidgetRef ref) {
@@ -136,9 +126,7 @@ class _CartScreenState extends State<CartScreen> {
                         child: ElevatedButton(
                           onPressed: () async {
                             await Navigator.pushNamed(
-                                context, PaymentScreen.routeName,
-                                arguments: price);
-                            refreshKey.currentState!.show();
+                                context, PaymentScreen.routeName);
                           },
                           style: ButtonStyle(
                             backgroundColor:

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/screens/drawer.dart';
@@ -117,7 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Wrap(
         alignment: WrapAlignment.center,
         spacing: isPhone ? 10 : MediaQuery.of(context).size.width * 0.02,
-        // spacing: MediaQuery.of(context).size.width * 0.02,
         children: [...iconList.map((e) => btnDrug(context, e)).toList()],
       ),
     );
@@ -141,38 +141,35 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.17,
-        child: Flexible(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 50,
-                width: 50,
-                child: ClipRRect(
-                  child: Image.network(
-                    cat.url,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return const Center(
-                        child: FlipStock(),
-                      );
-                    },
-                  ),
-                  // child: CachedNetworkImage(
-                  //   imageUrl: cat.url,
-                  //   placeholder: (context, url) => const FlipStock(),
-                  //   errorWidget: (context, url, error) =>
-                  //       const Icon(Icons.error),
-                  // ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+              width: 50,
+              child: ClipRRect(
+                // child: Image.network(
+                //   cat.url,
+                //   loadingBuilder: (context, child, loadingProgress) {
+                //     if (loadingProgress == null) return child;
+                //     return const Center(
+                //       child: FlipStock(),
+                //     );
+                //   },
+                // ),
+                child: CachedNetworkImage(
+                  imageUrl: cat.url,
+                  placeholder: (context, url) => const FlipStock(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
-              Text(
-                textAlign: TextAlign.center,
-                cat.title,
-                maxLines: 2,
-                style: const TextStyle(wordSpacing: 1, fontSize: 12.5),
-              ),
-            ],
-          ),
+            ),
+            Text(
+              textAlign: TextAlign.center,
+              cat.title,
+              maxLines: 2,
+              style: const TextStyle(wordSpacing: 1, fontSize: 12.5),
+            ),
+          ],
         ),
       ),
     );

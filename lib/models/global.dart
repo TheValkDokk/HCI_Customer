@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../screens/cart_screen.dart';
 import 'cart.dart';
@@ -25,6 +26,8 @@ void addorInc(Drug drug, WidgetRef ref, BuildContext ctx) {
   }
 }
 
+var formatter = NumberFormat('###,###');
+
 void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
   addorInc(drug, ref, context);
 
@@ -39,15 +42,17 @@ void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
         },
         textColor: Colors.cyanAccent,
       ),
-      content: Row(
-        children: const [
-          Icon(
-            Icons.shopping_bag_rounded,
-            color: Colors.white,
-          ),
-          SizedBox(width: 15),
-          Text("Item added to cart"),
-        ],
+      content: SafeArea(
+        child: Row(
+          children: const [
+            Icon(
+              Icons.shopping_bag_rounded,
+              color: Colors.white,
+            ),
+            SizedBox(width: 15),
+            Text("Item added to cart"),
+          ],
+        ),
       ),
       backgroundColor: Colors.green,
     ),

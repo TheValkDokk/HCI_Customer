@@ -36,44 +36,60 @@ class CartListNotifier extends StateNotifier<List<Cart>> {
     state = [...state, cart];
   }
 
+  void addAt(Cart cart, int i) {
+    var f = state;
+    f.insert(i, cart);
+    state = [...f];
+  }
+
   void calcPrice(int i) {
     final tempCart = state[i];
     tempCart.price = tempCart.quantity * tempCart.drug.price;
     remove(state[i]);
-    add(tempCart);
+    addAt(tempCart, i);
   }
 
   void inQuan(int i) {
     final tempCart = state[i];
     tempCart.quantity++;
-    remove(state[i]);
-    add(tempCart);
+    calcPrice(i);
   }
 
   void remove(Cart cart) {
     state = [
       for (final e in state)
-        if (e.drug.id != cart.drug.id) e,
+        if (e != cart) e,
     ];
   }
 
   void deQuan(int i) {
     final tempCart = state[i];
     tempCart.quantity--;
+
     remove(state[i]);
-    add(tempCart);
+    if (tempCart.quantity > 0) {
+      addAt(tempCart, i);
+      calcPrice(i);
+    }
   }
 
   void setQuan(int i, int quan) {
-    final tempCart = state[i];
-    tempCart.quantity == quan;
-    remove(state[i]);
-    add(tempCart);
+    if (quan <= 0) {
+      remove(state[i]);
+    } else {
+      final tempCart = state[i];
+      tempCart.quantity == quan;
+      remove(state[i]);
+      addAt(tempCart, i);
+      calcPrice(i);
+    }
   }
 
   void delete(int i) {
     if (state[i].quantity <= 0) remove(state[i]);
   }
+
+  void checkQuan(int i) {}
 }
 
 final cartLProvider =

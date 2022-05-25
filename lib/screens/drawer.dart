@@ -1,8 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-import '../drawer/my_flutter_app_icons.dart';
-
 class MenuItemDra {
   final String title;
   final IconData icon;
@@ -12,10 +10,6 @@ class MenuItemDra {
 class MenuItems {
   static const home = MenuItemDra('Home', Icons.home);
   static const about = MenuItemDra('About Us', Icons.info_outline_rounded);
-  static const drug = MenuItemDra('Unprescribed Drug', MyFlutterApp.pills);
-  static const equipment =
-      MenuItemDra('Medical Equipments', MyFlutterApp.pump_medical);
-  static const drugs = MenuItemDra('Unprescribed Drug', MyFlutterApp.pills);
 
   static const all = <MenuItemDra>[home, about];
 }
