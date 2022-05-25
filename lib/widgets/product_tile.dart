@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hci_customer/screens/info.dart';
 
 import '../models/drugs.dart';
 import '../models/global.dart';
 
-class DrugTile extends StatelessWidget {
+class DrugTile extends ConsumerWidget {
   const DrugTile(this._drug);
 
   final Drug _drug;
@@ -12,7 +13,7 @@ class DrugTile extends StatelessWidget {
   static const routeName = '/detail';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.of(context).size;
     double containerWidth = 170;
 
@@ -92,11 +93,15 @@ class DrugTile extends StatelessWidget {
           height: 8,
         ),
         SizedBox(
-          height: size.height * 0.06,
+          height: size.height * 0.05,
           width: containerWidth,
           child: ElevatedButton(
             onPressed: () {
-              showAddedMsg(context, _drug);
+              showAddedMsg(
+                context,
+                _drug,
+                ref,
+              );
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.green),

@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'drugs.dart';
 
 class Cart {
@@ -12,6 +15,68 @@ class Cart {
 
   @override
   String toString() => 'Cart(drug: $drug, quantity: $quantity, price: $price)';
+
+  Cart copyWith({
+    Drug? drug,
+    int? quantity,
+    double? price,
+  }) {
+    return Cart(
+      drug: drug ?? this.drug,
+      quantity: quantity ?? this.quantity,
+      price: price ?? this.price,
+    );
+  }
 }
 
-List<Cart> cartList = [];
+class CartListNotifier extends StateNotifier<List<Cart>> {
+  CartListNotifier() : super([]);
+
+  void add(Cart cart) {
+    state = [...state, cart];
+  }
+
+  void calcPrice(int i) {
+    final tempCart = state[i];
+    tempCart.price = tempCart.quantity * tempCart.drug.price;
+    remove(state[i]);
+    add(tempCart);
+  }
+
+  void inQuan(int i) {
+    final tempCart = state[i];
+    tempCart.quantity++;
+    remove(state[i]);
+    add(tempCart);
+  }
+
+  void remove(Cart cart) {
+    state = [
+      for (final e in state)
+        if (e.drug.id != cart.drug.id) e,
+    ];
+  }
+
+  void deQuan(int i) {
+    final tempCart = state[i];
+    tempCart.quantity--;
+    remove(state[i]);
+    add(tempCart);
+  }
+
+  void setQuan(int i, int quan) {
+    final tempCart = state[i];
+    tempCart.quantity == quan;
+    remove(state[i]);
+    add(tempCart);
+  }
+
+  void delete(int i) {
+    if (state[i].quantity <= 0) remove(state[i]);
+  }
+}
+
+final cartLProvider =
+    StateNotifierProvider<CartListNotifier, List<Cart>>((ref) {
+  return CartListNotifier();
+});

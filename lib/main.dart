@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/screens/payment.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'screens/home.dart';
+import 'screens/home_drawer.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(ProviderScope(child: MyApp()));
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+  late final ZoomDrawerController drawerController;
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         snackBarTheme: const SnackBarThemeData(
           contentTextStyle: TextStyle(fontFamily: "Raleway"),
         ),
       ),
       routes: {
-        HomeScreen.routeName: (context) => const HomeScreen(),
         PaymentScreen.routeName: (context) => const PaymentScreen(),
       },
-      title: 'Material App',
-      home: const HomeScreen(),
-      // home: const PaymentScreen(),
+      home: const HomeDrawer(),
     );
   }
 }

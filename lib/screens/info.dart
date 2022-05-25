@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hci_customer/screens/home.dart';
 
 import '../models/drugs.dart';
@@ -6,18 +7,16 @@ import '../models/global.dart';
 import '../widgets/product_tile.dart';
 import 'cart_screen.dart';
 
-class InfoScreen extends StatelessWidget {
+class InfoScreen extends ConsumerWidget {
   const InfoScreen(this._drug);
   final Drug _drug;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.of(context).size;
     bool isPhone = size.shortestSide < 650 ? true : false;
     var list = listDrug.where((e) => e.type == _drug.type).toList();
-    list.removeWhere(
-      (e) => e.id == _drug.id,
-    );
+    list.removeWhere((e) => e.id == _drug.id);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: () {
@@ -31,8 +30,10 @@ class InfoScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CartScreen()));
               },
               icon: const Icon(Icons.shopping_cart))
         ],
@@ -74,7 +75,14 @@ class InfoScreen extends StatelessWidget {
             width: size.width * 0.9,
             height: size.height * 0.06,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                addorInc(_drug, ref, context);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CartScreen()));
+              },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.green)),
               child: const Text(
@@ -87,7 +95,11 @@ class InfoScreen extends StatelessWidget {
             width: size.width * 0.9,
             child: ElevatedButton(
               onPressed: () {
-                showAddedMsg(context, _drug);
+                showAddedMsg(
+                  context,
+                  _drug,
+                  ref,
+                );
               },
               style: ElevatedButton.styleFrom(
                   side: const BorderSide(color: Colors.green),
@@ -149,9 +161,7 @@ class InfoScreen extends StatelessWidget {
               mainAxisExtent: 250,
             ),
             itemCount: list.length > 4 ? 4 : list.length,
-            itemBuilder: (context, i) => DrugTile(
-              list[i],
-            ),
+            itemBuilder: (context, i) => DrugTile(list[i]),
           ),
         ],
       )),
