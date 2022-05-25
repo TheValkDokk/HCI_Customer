@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/screens/drawer.dart';
+import 'package:searchfield/searchfield.dart';
 import '../models/category.dart';
 import '../models/drugs.dart';
 import '../widgets/flip_stock.dart';
 import '../widgets/smallGrid.dart';
 import 'cart_screen.dart';
+import 'info.dart';
 import 'load_more.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,6 +24,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isTop = false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -31,19 +35,38 @@ class _HomeScreenState extends State<HomeScreen> {
     var listA2 = listDrug.where((e) => e.type == 'A2').toList();
 
     return Scaffold(
-      appBar: _HomeAppBar(context),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _WidgetBtnGroup(isPhone, context),
-            const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: _HomeBody(context, listA1, isPhone, size, listA2),
-            )
-          ],
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showSearchDialog(size),
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.search),
       ),
+      appBar: _HomeAppBar(context),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _WidgetBtnGroup(isPhone, context),
+                const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: _HomeBody(context, listA1, isPhone, size, listA2),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showSearchDialog(Size size) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        var list = listDrug;
+        return _searchDia(list: list);
+      },
     );
   }
 
@@ -147,15 +170,6 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 50,
               width: 50,
               child: ClipRRect(
-                // child: Image.network(
-                //   cat.url,
-                //   loadingBuilder: (context, child, loadingProgress) {
-                //     if (loadingProgress == null) return child;
-                //     return const Center(
-                //       child: FlipStock(),
-                //     );
-                //   },
-                // ),
                 child: CachedNetworkImage(
                   imageUrl: cat.url,
                   placeholder: (context, url) => const FlipStock(),
@@ -170,6 +184,136 @@ class _HomeScreenState extends State<HomeScreen> {
               style: const TextStyle(wordSpacing: 1, fontSize: 12.5),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _searchDia extends StatefulWidget {
+  const _searchDia({
+    Key? key,
+    required this.list,
+  }) : super(key: key);
+
+  final List<Drug> list;
+
+  @override
+  State<_searchDia> createState() => _searchDiaState();
+}
+
+class _searchDiaState extends State<_searchDia> {
+  var searchController = TextEditingController();
+  List<Drug> searchedList = [];
+
+  List<Drug> filterList(String val) {
+    val = val.replaceAll('thuốc', '');
+    if (searchController.text == '') {
+      return listDrug;
+    } else {
+      return listDrug
+          .where((element) =>
+              element.fullName.contains(val) || element.title.contains(val))
+          .toList();
+    }
+  }
+
+  FocusNode myFocusNode = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    myFocusNode.requestFocus();
+    searchController.addListener(() {
+      setState(() {
+        searchedList = filterList(searchController.text);
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: SizedBox(
+        height: size.height * 0.7,
+        width: size.width * 0.85,
+        child: Material(
+          child: Center(
+            child: Container(
+              height: size.height * 0.6,
+              width: size.width * 0.85,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(40),
+              ),
+              child: Column(
+                children: [
+                  const Text(
+                    "Medicine Search",
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: SearchField(
+                      hint: 'Search',
+                      focusNode: myFocusNode,
+                      hasOverlay: false,
+                      suggestions: widget.list
+                          .map(
+                            (e) => SearchFieldListItem(e.fullName),
+                          )
+                          .toList(),
+                      maxSuggestionsInViewPort: 3,
+                      controller: searchController,
+                      searchStyle: TextStyle(
+                        fontSize: 18,
+                        letterSpacing: 1,
+                        color: Colors.black.withOpacity(0.8),
+                      ),
+                      searchInputDecoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black.withOpacity(0.8),
+                          ),
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: searchedList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (ctx) =>
+                                        InfoScreen(searchedList[index])));
+                          },
+                          child: ListTile(
+                            leading: SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: Image.network(searchedList[index].imgUrl),
+                            ),
+                            title: Text(searchedList[index].title),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

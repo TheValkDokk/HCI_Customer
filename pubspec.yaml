@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  anim_search_bar: ^2.0.2
   assorted_layout_widgets: ^6.0.0
   cached_network_image: ^3.2.1
   cupertino_icons: ^1.0.2
@@ -37,6 +38,7 @@ dependencies:
   flutter_staggered_animations: ^1.0.0
   flutter_zoom_drawer: ^3.0.2
   intl: ^0.17.0
+  searchfield: ^0.6.5
 
 dev_dependencies:
   flutter_lints: ^2.0.0
