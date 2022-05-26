@@ -1,5 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hci_customer/models/cart.dart';
+import 'package:hci_customer/screens/home_drawer.dart';
+
+import '../main.dart';
 
 class MenuItemDra {
   final String title;
@@ -14,14 +20,15 @@ class MenuItems {
   static const all = <MenuItemDra>[home, about];
 }
 
-class DrawerScreen extends StatelessWidget {
+class DrawerScreen extends ConsumerWidget {
   const DrawerScreen({required this.currentItem, required this.onSelectedItem});
 
   final currentItem;
   final ValueChanged<MenuItemDra> onSelectedItem;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(UserProvider);
     return Theme(
       data: ThemeData.dark(),
       child: Scaffold(
@@ -41,31 +48,45 @@ class DrawerScreen extends StatelessWidget {
                       fit: BoxFit.fill,
                       width: 500,
                       height: 500,
-                      'https://media.giphy.com/media/Q5Ra0QQUpPYdlFmFrj/giphy.gif'),
+                      user!.photoURL ??
+                          'https://media.giphy.com/media/Q5Ra0QQUpPYdlFmFrj/giphy.gif'),
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Text(
-                  'Someone\'s Name',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 25),
-                ),
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Center(child: Consumer(
+                builder: (context, ref, child) {
+                  return Text(
+                    user.displayName.toString(),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 25),
+                  );
+                },
+              )),
             ),
             const Spacer(flex: 1),
             ...MenuItems.all.map(buildMenuItem).toList(),
             const Spacer(flex: 2),
             Padding(
               padding: const EdgeInsets.only(bottom: 15),
-              child: ListTile(
-                onTap: () {},
-                minLeadingWidth: 20,
-                leading: const Icon(Icons.logout),
-                title: const Text("Logout"),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  return ListTile(
+                    onTap: () async {
+                      ref.watch(googleSignInProvider).signOut();
+                      await FirebaseAuth.instance.signOut();
+                      ref.invalidate(cartLProvider);
+
+                      ref.invalidate(googleSignInProvider);
+                      navKey.currentState!.popUntil((route) => route.isFirst);
+                    },
+                    minLeadingWidth: 20,
+                    leading: const Icon(Icons.logout),
+                    title: const Text("Logout"),
+                  );
+                },
               ),
             )
           ],

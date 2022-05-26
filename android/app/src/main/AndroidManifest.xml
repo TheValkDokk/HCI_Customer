@@ -2,7 +2,7 @@
     package="com.example.hci_customer">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="hci_customer"
+        android:label="Pharmacy Store"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

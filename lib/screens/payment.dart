@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hci_customer/widgets/remove_all_dialog.dart';
+import 'package:string_validator/string_validator.dart';
 
 import '../models/cart.dart';
 import '../widgets/btnConfirmOrder.dart';
@@ -20,8 +23,66 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   var nameCtl = TextEditingController();
   var phoneCtl = TextEditingController();
 
-  bool isEditable = false;
+  final u = FirebaseAuth.instance.currentUser!;
+
+  @override
+  void initState() {
+    nameCtl.text = u.displayName.toString();
+    if (u.phoneNumber.toString() == 'null') {
+      phoneCtl.text = '';
+    } else {
+      phoneCtl.text = u.phoneNumber.toString();
+    }
+    addressCtl.text = '';
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameCtl.dispose();
+    addressCtl.dispose();
+    phoneCtl.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (nameCtl.text.isNotEmpty &&
+        phoneCtl.text.isNotEmpty &&
+        addressCtl.text.isNotEmpty) {
+      isFilled = true;
+    }
+    super.didChangeDependencies();
+  }
+
+  bool isPhoneNumber(String input) {
+    return isNumeric(input) && isLength(input, 9, 10);
+  }
+
+  String? get errorTextPhoneInput {
+    if (!isPhoneNumber(phoneCtl.text)) {
+      return 'Invaild Phone Number';
+    }
+    return null;
+  }
+
+  String? get errorTextNameInput {
+    if (nameCtl.text.isEmpty) {
+      return 'Empty Name';
+    }
+    return null;
+  }
+
+  String? get errorTextAddrInput {
+    if (addressCtl.text.isEmpty) {
+      return 'Empty Address';
+    }
+    return null;
+  }
+
+  bool isFilled = false;
   double price = 0;
+
   double calcTotal(List<Cart> list) {
     price = 0;
     for (var element in list) {
@@ -37,6 +98,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     for (var element in cartL) {
       price += element.price;
     }
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -51,15 +113,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 const Divider(),
                 SizedBox(
                   width: size.width * 0.8,
-                  height: size.height * 0.2,
                   child: Column(
                     children: [
-                      inputCusData(size, Icons.person, nameCtl,
-                          'Input Your Full Name', TextInputType.name),
-                      inputCusData(size, Icons.phone, phoneCtl,
-                          'Input Your Full Name', TextInputType.phone),
+                      inputCusData(size, Icons.person, nameCtl, 'Full Name',
+                          TextInputType.name, false),
+                      inputCusData(size, Icons.phone, phoneCtl, 'Phone Number',
+                          TextInputType.phone, true),
                       inputCusData(size, Icons.location_city, addressCtl,
-                          'Input Your Full Name', TextInputType.streetAddress),
+                          'Address', TextInputType.streetAddress, false),
                       etaTime(size, '1 weeks'),
                     ],
                   ),
@@ -72,13 +133,12 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     return _listviewPayment(list, context);
                   }),
                 ),
-                SizedBox(
-                  height: size.height * 0.1,
-                )
+                SizedBox(height: size.height * 0.1)
               ],
             ),
           ),
-          BtnConfirmOrder(price),
+          BtnConfirmOrder(
+              isFilled, price, nameCtl.text, phoneCtl.text, addressCtl.text),
         ],
       ),
     );
@@ -95,9 +155,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             children: [
               SlidableAction(
                 onPressed: (context) {
-                  setState(() {
-                    list.removeAt(i);
-                  });
+                  ref.read(cartLProvider.notifier).remove(list[i]);
+                  if (ref.watch(cartLProvider).isEmpty) {
+                    Navigator.pop(context, true);
+                  }
                 },
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
@@ -106,7 +167,6 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               )
             ],
           ),
-          // child: paymentTile(context, list, i),
           child: PaymentTile(i),
         );
       },
@@ -151,10 +211,38 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       ),
       actions: [
         IconButton(
-            onPressed: () => setState(() {
-                  isEditable = !isEditable;
-                }),
-            icon: Icon(isEditable ? Icons.edit : Icons.edit_outlined))
+            onPressed: () {
+              // showDialog(
+              //     context: context, builder: (context) => const RemoveDialog());
+              showGeneralDialog(
+                context: context,
+                barrierLabel: "Barrier",
+                barrierDismissible: true,
+                barrierColor: Colors.black.withOpacity(0.5),
+                transitionDuration: const Duration(milliseconds: 400),
+                pageBuilder: (_, __, ___) {
+                  return const RemoveDialog();
+                },
+                transitionBuilder: (_, anim, __, child) {
+                  Tween<Offset> tween;
+                  if (anim.status == AnimationStatus.reverse) {
+                    tween = Tween(begin: const Offset(-1, 0), end: Offset.zero);
+                  } else {
+                    tween = Tween(begin: const Offset(1, 0), end: Offset.zero);
+                  }
+                  return SlideTransition(
+                    position: tween.animate(anim),
+                    child: FadeTransition(
+                      opacity: anim,
+                      child: child,
+                    ),
+                  );
+                },
+              );
+            },
+            icon: const Icon(
+              Icons.delete_rounded,
+            ))
       ],
     );
   }
@@ -184,8 +272,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     );
   }
 
-  Row inputCusData(
-      Size size, IconData icon, var ctl, String hint, TextInputType kbType) {
+  Row inputCusData(Size size, IconData icon, var ctl, String hint,
+      TextInputType kbType, bool isPhone) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -198,12 +286,39 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         const Spacer(),
         SizedBox(
           width: size.width * 0.7,
-          child: TextField(
-            controller: ctl,
-            keyboardType: kbType,
-            decoration: InputDecoration(hintText: hint),
-            enabled: isEditable,
-          ),
+          child: isPhone
+              ? TextField(
+                  controller: ctl,
+                  onChanged: (v) {
+                    if (v.isEmpty) {
+                      setState(() {
+                        isFilled = false;
+                      });
+                    }
+                  },
+                  keyboardType: kbType,
+                  decoration: InputDecoration(
+                    labelText: hint,
+                    errorText: errorTextPhoneInput,
+                  ),
+                )
+              : TextField(
+                  onChanged: (v) {
+                    if (v.isEmpty) {
+                      setState(() {
+                        isFilled = false;
+                      });
+                    }
+                  },
+                  controller: ctl,
+                  keyboardType: kbType,
+                  decoration: InputDecoration(
+                    labelText: hint,
+                    errorText: ctl == nameCtl
+                        ? errorTextNameInput
+                        : errorTextAddrInput,
+                  ),
+                ),
         ),
       ],
     );

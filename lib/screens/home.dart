@@ -61,11 +61,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void showSearchDialog(Size size) {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (BuildContext context) {
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (_, __, ___) {
         var list = listDrug;
         return _searchDia(list: list);
+      },
+      transitionBuilder: (_, anim, __, child) {
+        Tween<Offset> tween;
+        if (anim.status == AnimationStatus.reverse) {
+          tween = Tween(begin: const Offset(-1, 0), end: Offset.zero);
+        } else {
+          tween = Tween(begin: const Offset(1, 0), end: Offset.zero);
+        }
+
+        return SlideTransition(
+          position: tween.animate(anim),
+          child: FadeTransition(
+            opacity: anim,
+            child: child,
+          ),
+        );
       },
     );
   }
@@ -96,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         IconButton(
           onPressed: () {
+            ScaffoldMessenger.of(context).clearSnackBars();
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -104,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
           icon: const Icon(Icons.shopping_cart),
-        )
+        ),
       ],
     );
   }
@@ -298,13 +319,17 @@ class _searchDiaState extends State<_searchDia> {
                                     builder: (ctx) =>
                                         InfoScreen(searchedList[index])));
                           },
-                          child: ListTile(
-                            leading: SizedBox(
-                              height: 100,
-                              width: 100,
-                              child: Image.network(searchedList[index].imgUrl),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              leading: SizedBox(
+                                height: 100,
+                                width: 100,
+                                child:
+                                    Image.network(searchedList[index].imgUrl),
+                              ),
+                              title: Text(searchedList[index].title),
                             ),
-                            title: Text(searchedList[index].title),
                           ),
                         );
                       },

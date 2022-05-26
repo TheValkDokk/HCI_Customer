@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "649279040490",
+    "project_id": "pharmacy-app-fae11",
+    "storage_bucket": "pharmacy-app-fae11.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649279040490:android:fb5945ec34576c10e2e093",
+        "android_client_info": {
+          "package_name": "com.example.hci_customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "649279040490-4ul3gnp7cc8lllerrgpntr14ga62igcp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxkNl0IjqzfUAmzlXOeq318hf3z5LvCmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "649279040490-4ul3gnp7cc8lllerrgpntr14ga62igcp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'drugs.dart';
@@ -27,6 +29,27 @@ class Cart {
       price: price ?? this.price,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'drug': drug.toMap(),
+      'quantity': quantity,
+      'price': price,
+    };
+  }
+
+  factory Cart.fromMap(Map<String, dynamic> map) {
+    return Cart(
+      drug: Drug.fromMap(map['drug'] as Map<String, dynamic>),
+      quantity: map['quantity'] as int,
+      price: map['price'] as double,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Cart.fromJson(String source) =>
+      Cart.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class CartListNotifier extends StateNotifier<List<Cart>> {
@@ -89,7 +112,9 @@ class CartListNotifier extends StateNotifier<List<Cart>> {
     if (state[i].quantity <= 0) remove(state[i]);
   }
 
-  void checkQuan(int i) {}
+  void wipe() {
+    state = [];
+  }
 }
 
 final cartLProvider =

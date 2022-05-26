@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Drug {
   String title;
@@ -29,6 +31,43 @@ class Drug {
   String toString() {
     return 'Drug(title: $title, id: $id, unit: $unit, price: $price, imgUrl: $imgUrl)';
   }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'title': title,
+      'fullName': fullName,
+      'id': id,
+      'unit': unit,
+      'price': price,
+      'imgUrl': imgUrl,
+      'type': type,
+      'ingredients': ingredients,
+      'uses': uses,
+      'rating': rating,
+      'brought': brought,
+    };
+  }
+
+  factory Drug.fromMap(Map<String, dynamic> map) {
+    return Drug(
+      title: map['title'] as String,
+      fullName: map['fullName'] as String,
+      id: map['id'] as String,
+      unit: map['unit'] as String,
+      price: map['price'] as double,
+      imgUrl: map['imgUrl'] as String,
+      type: map['type'] as String,
+      ingredients: map['ingredients'] as String,
+      uses: map['uses'] as String,
+      rating: map['rating'] as double,
+      brought: map['brought'] as int,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Drug.fromJson(String source) =>
+      Drug.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 final List<Drug> listDrug = [
