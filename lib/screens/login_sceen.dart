@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hci_customer/main.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -56,29 +57,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future signInWithGoogle() async {
-    try {
-      final ggSignIn = ref.watch(googleSignInProvider);
-      final GoogleSignInAccount? googleUser = await ggSignIn.signIn();
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    if (kIsWeb) {
+      GoogleAuthProvider authProvider = GoogleAuthProvider();
+      try {
+        final UserCredential userCredential =
+            await auth.signInWithPopup(authProvider);
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+        user = userCredential.user;
+        navKey.currentState!.popUntil((route) => route.isFirst);
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      try {
+        final ggSignIn = ref.watch(googleSignInProvider);
+        final GoogleSignInAccount? googleUser = await ggSignIn.signIn();
 
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+        final GoogleSignInAuthentication? googleAuth =
+            await googleUser?.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
 
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      navKey.currentState!.popUntil((route) => route.isFirst);
-    } on FirebaseAuthException catch (e) {
-      print(e);
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+        await FirebaseAuth.instance.signInWithCredential(credential);
+        navKey.currentState!.popUntil((route) => route.isFirst);
+      } on FirebaseAuthException catch (e) {
+        print(e);
+      }
     }
   }
 }

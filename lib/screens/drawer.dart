@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hci_customer/models/cart.dart';
 import 'package:hci_customer/screens/home_drawer.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../main.dart';
 
@@ -75,10 +76,11 @@ class DrawerScreen extends ConsumerWidget {
                 builder: (context, ref, child) {
                   return ListTile(
                     onTap: () async {
-                      ref.watch(googleSignInProvider).signOut();
+                      if (!kIsWeb) {
+                        ref.watch(googleSignInProvider).signOut();
+                      }
                       await FirebaseAuth.instance.signOut();
                       ref.invalidate(cartLProvider);
-
                       ref.invalidate(googleSignInProvider);
                       navKey.currentState!.popUntil((route) => route.isFirst);
                     },

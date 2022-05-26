@@ -6,6 +6,7 @@ import 'package:hci_customer/models/user.dart';
 import 'package:hci_customer/screens/payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
 import 'screens/home_drawer.dart';
 import 'screens/login_sceen.dart';
@@ -14,7 +15,24 @@ final googleSignInProvider = StateProvider((_) => GoogleSignIn());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  var appId = '';
+
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    appId = '1:649279040490:android:fb5945ec34576c10e2e093';
+  } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+    appId = '1:649279040490:ios:0f52dc53a7a9e924e2e093';
+  } else {
+    appId = '1:649279040490:web:2c61fb4500a204e1e2e093';
+  }
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyAxkNl0IjqzfUAmzlXOeq318hf3z5LvCmg",
+      appId: appId,
+      messagingSenderId: "649279040490",
+      projectId: "pharmacy-app-fae11",
+      authDomain: 'pharmacy-app-fae11.firebaseapp.com',
+    ),
+  );
   runApp(ProviderScope(child: MyApp()));
 }
 
