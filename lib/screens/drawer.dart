@@ -22,14 +22,16 @@ class MenuItems {
 }
 
 class DrawerScreen extends ConsumerWidget {
-  const DrawerScreen({required this.currentItem, required this.onSelectedItem});
+  const DrawerScreen(
+      {Key? key, required this.currentItem, required this.onSelectedItem})
+      : super(key: key);
 
-  final currentItem;
+  final MenuItemDra currentItem;
   final ValueChanged<MenuItemDra> onSelectedItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(UserProvider);
+    final user = ref.watch(UserProvider).currentUser;
     return Theme(
       data: ThemeData.dark(),
       child: Scaffold(

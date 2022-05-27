@@ -10,7 +10,7 @@ import 'package:hci_customer/screens/drawer.dart';
 import 'about.dart';
 import 'home.dart';
 
-final UserProvider = StateProvider((_) => FirebaseAuth.instance.currentUser);
+final UserProvider = StateProvider((_) => FirebaseAuth.instance);
 
 class HomeDrawer extends ConsumerStatefulWidget {
   const HomeDrawer();
@@ -27,10 +27,9 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(UserProvider.state).state = FirebaseAuth.instance.currentUser;
+      ref.read(UserProvider.state).state = FirebaseAuth.instance;
     });
   }
 

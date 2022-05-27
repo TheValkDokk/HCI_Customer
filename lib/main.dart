@@ -6,8 +6,8 @@ import 'package:hci_customer/models/user.dart';
 import 'package:hci_customer/screens/payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
+import 'firebase_options.dart';
 import 'screens/home_drawer.dart';
 import 'screens/login_sceen.dart';
 
@@ -15,31 +15,18 @@ final googleSignInProvider = StateProvider((_) => GoogleSignIn());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var appId = '';
-
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    appId = '1:649279040490:android:fb5945ec34576c10e2e093';
-  } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-    appId = '1:649279040490:ios:0f52dc53a7a9e924e2e093';
-  } else {
-    appId = '1:649279040490:web:2c61fb4500a204e1e2e093';
-  }
   await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: "AIzaSyAxkNl0IjqzfUAmzlXOeq318hf3z5LvCmg",
-      appId: appId,
-      messagingSenderId: "649279040490",
-      projectId: "pharmacy-app-fae11",
-      authDomain: 'pharmacy-app-fae11.firebaseapp.com',
-    ),
+    options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 final navKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatefulWidget {
   static const routeName = '/main';
+
+  const MyApp({Key? key}) : super(key: key);
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -60,7 +47,7 @@ class _MyAppState extends State<MyApp> {
       ),
       routes: {
         PaymentScreen.routeName: (context) => const PaymentScreen(),
-        MyApp.routeName: (context) => MyApp(),
+        MyApp.routeName: (context) => const MyApp(),
         HomeDrawer.routeName: (context) => const HomeDrawer(),
       },
       home: StreamBuilder(
@@ -72,7 +59,6 @@ class _MyAppState extends State<MyApp> {
             );
           } else if (snap.hasData) {
             sendUser();
-            //checkExist();
             return const HomeDrawer();
           } else {
             return const LoginScreen();
@@ -88,12 +74,7 @@ class _MyAppState extends State<MyApp> {
     final user = PharmacyUser(
         mail: u.email, name: u.displayName, phone: phone.toString(), addr: '');
     if (!checkExist(user)) {
-      db
-          .collection('users')
-          .doc(user.mail)
-          .set(user.toFirestore())
-          .then((_) => print('added'))
-          .catchError((e) => print(e));
+      db.collection('users').doc(user.mail).set(user.toFirestore());
     }
   }
 
@@ -103,7 +84,6 @@ class _MyAppState extends State<MyApp> {
       for (var e in value.docs) {
         if (e.data()['mail'] == u.mail) {
           isExist = true;
-          print("true");
         }
       }
     });
