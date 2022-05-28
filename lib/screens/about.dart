@@ -80,6 +80,7 @@ class AboutScreen extends StatelessWidget {
             child: CircleAvatar(
               child: Image.network(
                 u.url,
+                cacheHeight: 500,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return const Center(

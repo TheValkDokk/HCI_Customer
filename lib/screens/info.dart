@@ -30,8 +30,10 @@ class InfoScreen extends ConsumerWidget {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CartScreen()));
               },
               icon: const Icon(Icons.shopping_cart))
         ],
@@ -45,7 +47,11 @@ class InfoScreen extends ConsumerWidget {
             width: double.infinity,
             child: Hero(
                 tag: _drug.id,
-                child: Image.network(_drug.imgUrl, fit: BoxFit.cover)),
+                child: Image.network(
+                  _drug.imgUrl,
+                  fit: BoxFit.cover,
+                  cacheHeight: 500,
+                )),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -76,8 +82,10 @@ class InfoScreen extends ConsumerWidget {
               onPressed: () {
                 addorInc(_drug, ref, context);
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CartScreen()));
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.green)),

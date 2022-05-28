@@ -118,8 +118,10 @@ class SearchDialogState extends State<SearchDialog> {
                               leading: SizedBox(
                                 height: 100,
                                 width: 100,
-                                child:
-                                    Image.network(searchedList[index].imgUrl),
+                                child: Image.network(
+                                  searchedList[index].imgUrl,
+                                  cacheHeight: 500,
+                                ),
                               ),
                               title: Text(searchedList[index].title),
                             ),

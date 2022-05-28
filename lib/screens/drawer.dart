@@ -51,6 +51,7 @@ class DrawerScreen extends ConsumerWidget {
                       fit: BoxFit.fill,
                       width: 500,
                       height: 500,
+                      cacheHeight: 500,
                       user!.photoURL ??
                           'https://media.giphy.com/media/Q5Ra0QQUpPYdlFmFrj/giphy.gif'),
                 ),

@@ -15,7 +15,7 @@ class PaymentTile extends ConsumerWidget {
         width: MediaQuery.of(context).size.width * 0.3,
         child: Image.network(
           list[i].drug.imgUrl,
-          cacheHeight: 100,
+          cacheHeight: 500,
         ),
       ),
       title: Text(
