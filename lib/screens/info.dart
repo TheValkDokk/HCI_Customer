@@ -30,10 +30,8 @@ class InfoScreen extends ConsumerWidget {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CartScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CartScreen()));
               },
               icon: const Icon(Icons.shopping_cart))
         ],
@@ -78,10 +76,8 @@ class InfoScreen extends ConsumerWidget {
               onPressed: () {
                 addorInc(_drug, ref, context);
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CartScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CartScreen()));
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.green)),

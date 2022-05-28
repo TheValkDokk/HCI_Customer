@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +8,8 @@ import 'package:hci_customer/screens/drawer.dart';
 import 'about.dart';
 import 'home.dart';
 
-final UserProvider = StateProvider((_) => FirebaseAuth.instance.currentUser);
+final UserProvider = StateProvider((_) => FirebaseAuth.instance);
+final ScreenProvider = StateProvider((_) => MenuItems.home);
 
 class HomeDrawer extends ConsumerStatefulWidget {
   const HomeDrawer();
@@ -23,14 +22,12 @@ class HomeDrawer extends ConsumerStatefulWidget {
 
 class _HomeDrawerState extends ConsumerState<HomeDrawer> {
   final _drawerController = ZoomDrawerController();
-  var currentItem = MenuItems.home;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(UserProvider.state).state = FirebaseAuth.instance.currentUser;
+      ref.read(UserProvider.state).state = FirebaseAuth.instance;
     });
   }
 
@@ -39,7 +36,6 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
     return Container(
       color: Colors.green.shade400,
       child: ZoomDrawer(
-        style: DrawerStyle.defaultStyle,
         slideWidth: MediaQuery.of(context).size.width * 0.7,
         controller: _drawerController,
         borderRadius: 24.0,
@@ -49,31 +45,20 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
         drawerShadowsBackgroundColor: Colors.green,
         openCurve: Curves.fastOutSlowIn,
         mainScreen: getScreen(),
-        menuScreen: DrawerScreen(
-          currentItem: currentItem,
-          onSelectedItem: (item) => changeScreen(item),
-        ),
+        menuScreen: DrawerScreen(_drawerController),
       ),
     );
   }
 
-  void changeScreen(var item) {
-    setState(() {
-      currentItem = item;
-      Timer(const Duration(milliseconds: 10), () {
-        _drawerController.close!();
-      });
-    });
-  }
-
   Widget getScreen() {
-    switch (currentItem) {
+    final currentScreen = ref.watch(ScreenProvider);
+    switch (currentScreen) {
       case MenuItems.home:
-        return HomeScreen(_drawerController, (item) => changeScreen(item));
+        return HomeScreen(_drawerController);
       case MenuItems.about:
         return const AboutScreen();
       default:
-        return HomeScreen(_drawerController, (item) => changeScreen(item));
+        return HomeScreen(_drawerController);
     }
   }
 }

@@ -6,16 +6,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hci_customer/main.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-class LoginScreen extends ConsumerStatefulWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final gg = ref.watch(googleSignInProvider);
     return Scaffold(
       body: Center(
         child: Column(
@@ -36,7 +32,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               width: MediaQuery.of(context).size.width * 0.7,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  signInWithGoogle();
+                  signInWithGoogle(context, gg);
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
@@ -56,7 +52,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Future signInWithGoogle() async {
+  Future signInWithGoogle(BuildContext context, var gg) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     if (kIsWeb) {
@@ -78,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     } else {
       try {
-        final ggSignIn = ref.watch(googleSignInProvider);
+        final ggSignIn = gg;
         final GoogleSignInAccount? googleUser = await ggSignIn.signIn();
 
         final GoogleSignInAuthentication? googleAuth =

@@ -26,17 +26,12 @@ void addorInc(Drug drug, WidgetRef ref, BuildContext ctx) {
     }
     ref
         .read(cartLProvider.notifier)
-        .state
         .add(Cart(drug: drug, quantity: 1, price: drug.price));
   }
 }
 
 void sendOrder(Order order) {
-  db
-      .collection('orders')
-      .add(order.toMap())
-      .then((_) => print('added'))
-      .catchError((e) => print(e));
+  db.collection('orders').add(order.toMap());
 }
 
 void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
@@ -48,8 +43,8 @@ void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
         label: 'To my Cart',
         onPressed: () {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const CartScreen()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CartScreen()));
         },
         textColor: Colors.cyanAccent,
       ),

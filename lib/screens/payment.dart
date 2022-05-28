@@ -212,8 +212,6 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       actions: [
         IconButton(
             onPressed: () {
-              // showDialog(
-              //     context: context, builder: (context) => const RemoveDialog());
               showGeneralDialog(
                 context: context,
                 barrierLabel: "Barrier",

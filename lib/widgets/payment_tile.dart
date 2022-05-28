@@ -13,7 +13,10 @@ class PaymentTile extends ConsumerWidget {
       contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       leading: SizedBox(
         width: MediaQuery.of(context).size.width * 0.3,
-        child: Image.network(list[i].drug.imgUrl),
+        child: Image.network(
+          list[i].drug.imgUrl,
+          cacheHeight: 100,
+        ),
       ),
       title: Text(
         list[i].drug.fullName,

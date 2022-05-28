@@ -1,20 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/settings.dart';
 
 import '../models/drugs.dart';
 import '../widgets/product_tile.dart';
 
 class LoadMoreScreen extends StatefulWidget {
-  const LoadMoreScreen(
-      {required this.title,
-      required this.list,
-      required this.drawerController});
+  const LoadMoreScreen({
+    required this.title,
+    required this.list,
+  });
   final String title;
   final List<Drug> list;
-  final ZoomDrawerController drawerController;
 
   @override
   State<LoadMoreScreen> createState() => _LoadMoreScreenState();
@@ -42,16 +40,6 @@ class _LoadMoreScreenState extends State<LoadMoreScreen> {
   }
 
   Widget gridBuilder(Size size) {
-    // return GridView.builder(
-    //   shrinkWrap: true,
-    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    //     crossAxisCount: (size.width / 300).ceil(),
-    //     mainAxisExtent: 256,
-    //     mainAxisSpacing: 5,
-    //   ),
-    //   itemCount: filterlist.length,
-    //   itemBuilder: (context, i) => DrugTile(filterlist[i]),
-    // );
     int count = (size.width / 300).ceil();
     return AnimationLimiter(
       child: GridView.builder(
@@ -139,7 +127,7 @@ class _LoadMoreScreenState extends State<LoadMoreScreen> {
               decoration: BoxDecoration(
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                      color: Colors.grey.withOpacity(0.6),
+                      color: Colors.grey.shade500,
                       offset: const Offset(1.1, 1.1),
                       blurRadius: 5.0),
                 ],
