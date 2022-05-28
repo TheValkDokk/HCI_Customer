@@ -5,7 +5,7 @@ import 'package:hci_customer/screens/info.dart';
 import '../models/drugs.dart';
 import '../models/global.dart';
 
-class DrugTile extends ConsumerWidget {
+class DrugTile extends StatelessWidget {
   const DrugTile(this._drug);
 
   final Drug _drug;
@@ -13,7 +13,7 @@ class DrugTile extends ConsumerWidget {
   static const routeName = '/detail';
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double containerWidth = 170;
 
@@ -44,6 +44,7 @@ class DrugTile extends ConsumerWidget {
                         child: Image.network(
                           _drug.imgUrl,
                           height: 100,
+                          cacheHeight: 100,
                           fit: BoxFit.cover,
                           width: double.infinity,
                         ),
@@ -95,27 +96,25 @@ class DrugTile extends ConsumerWidget {
         SizedBox(
           height: size.height * 0.05,
           width: containerWidth,
-          child: ElevatedButton(
-            onPressed: () {
-              showAddedMsg(
-                context,
-                _drug,
-                ref,
-              );
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20)),
+          child: Consumer(
+            builder: (context, ref, child) => ElevatedButton(
+              onPressed: () {
+                showAddedMsg(context, _drug, ref);
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20)),
+                  ),
                 ),
               ),
-            ),
-            child: const Text(
-              "Add to cart",
-              style: TextStyle(fontSize: 18),
+              child: const Text(
+                "Add to cart",
+                style: TextStyle(fontSize: 18),
+              ),
             ),
           ),
         ),

@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 import 'package:hci_customer/models/cart.dart';
 import 'package:hci_customer/screens/home_drawer.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -22,16 +25,14 @@ class MenuItems {
 }
 
 class DrawerScreen extends ConsumerWidget {
-  const DrawerScreen(
-      {Key? key, required this.currentItem, required this.onSelectedItem})
-      : super(key: key);
+  const DrawerScreen(this._drawerController);
 
-  final MenuItemDra currentItem;
-  final ValueChanged<MenuItemDra> onSelectedItem;
+  final ZoomDrawerController _drawerController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(UserProvider).currentUser;
+    print('build');
     return Theme(
       data: ThemeData.dark(),
       child: Scaffold(
@@ -70,7 +71,9 @@ class DrawerScreen extends ConsumerWidget {
               )),
             ),
             const Spacer(flex: 1),
-            ...MenuItems.all.map(buildMenuItem).toList(),
+            ...MenuItems.all
+                .map((e) => BuildMenuItem(e, _drawerController))
+                .toList(),
             const Spacer(flex: 2),
             Padding(
               padding: const EdgeInsets.only(bottom: 15),
@@ -98,13 +101,27 @@ class DrawerScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget buildMenuItem(MenuItemDra item) => ListTile(
-        selected: currentItem == item,
-        selectedTileColor: Colors.white,
-        minLeadingWidth: 20,
-        leading: Icon(item.icon),
-        title: Text(item.title),
-        onTap: () => onSelectedItem(item),
-      );
+class BuildMenuItem extends ConsumerWidget {
+  const BuildMenuItem(this.item, this._drawerController);
+  final MenuItemDra item;
+  final ZoomDrawerController _drawerController;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentItem = ref.watch(ScreenProvider);
+    return ListTile(
+      selected: currentItem == item,
+      selectedTileColor: Colors.white,
+      minLeadingWidth: 20,
+      leading: Icon(item.icon),
+      title: Text(item.title),
+      onTap: () {
+        ref.read(ScreenProvider.notifier).state = item;
+        Timer(const Duration(milliseconds: 50), () {
+          _drawerController.close!();
+        });
+      },
+    );
+  }
 }

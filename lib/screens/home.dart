@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
-import 'package:hci_customer/screens/drawer.dart';
 import '../models/category.dart';
 import '../models/drugs.dart';
 import '../widgets/btnDrug.dart';
@@ -9,19 +8,13 @@ import '../widgets/smallGrid.dart';
 import 'load_more.dart';
 import 'search_dialog.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen(this._drawerController, this.onSelectedItem);
+class HomeScreen extends StatelessWidget {
+  HomeScreen(this._drawerController);
 
   final ZoomDrawerController _drawerController;
-  final ValueChanged<MenuItemDra> onSelectedItem;
 
   static const routeName = 'home';
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   bool isTop = false;
 
   @override
@@ -30,11 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
     bool isPhone = size.shortestSide < 650 ? true : false;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showSearchDialog(size),
+        onPressed: () => showSearchDialog(size, context),
         backgroundColor: Colors.green,
         child: const Icon(Icons.search),
       ),
-      appBar: HomeAppBar(widget._drawerController),
+      appBar: HomeAppBar(_drawerController),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -54,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void showSearchDialog(Size size) {
+  void showSearchDialog(Size size, BuildContext context) {
     showGeneralDialog(
       context: context,
       barrierLabel: "Barrier",

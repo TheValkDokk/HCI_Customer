@@ -40,16 +40,6 @@ class _LoadMoreScreenState extends State<LoadMoreScreen> {
   }
 
   Widget gridBuilder(Size size) {
-    // return GridView.builder(
-    //   shrinkWrap: true,
-    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    //     crossAxisCount: (size.width / 300).ceil(),
-    //     mainAxisExtent: 256,
-    //     mainAxisSpacing: 5,
-    //   ),
-    //   itemCount: filterlist.length,
-    //   itemBuilder: (context, i) => DrugTile(filterlist[i]),
-    // );
     int count = (size.width / 300).ceil();
     return AnimationLimiter(
       child: GridView.builder(
@@ -137,7 +127,7 @@ class _LoadMoreScreenState extends State<LoadMoreScreen> {
               decoration: BoxDecoration(
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                      color: Colors.grey.withOpacity(0.6),
+                      color: Colors.grey.shade500,
                       offset: const Offset(1.1, 1.1),
                       blurRadius: 5.0),
                 ],

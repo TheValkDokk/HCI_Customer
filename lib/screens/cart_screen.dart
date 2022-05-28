@@ -8,36 +8,23 @@ import 'package:intl/intl.dart';
 
 import '../widgets/cart_tile.dart';
 
-class CartScreen extends StatefulWidget {
+class CartScreen extends StatelessWidget {
   const CartScreen();
 
-  @override
-  State<CartScreen> createState() => _CartScreenState();
-}
-
-class _CartScreenState extends State<CartScreen> {
-  var refreshKey = GlobalKey<RefreshIndicatorState>();
-  final key = GlobalKey<AnimatedListState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: _CartAppBar(context),
-      body: RefreshIndicator(
-        key: refreshKey,
-        onRefresh: () async {
-          setState(() {});
+      body: Consumer(
+        builder: (context, ref, child) {
+          var list = ref.watch(cartLProvider);
+          return list.isEmpty
+              ? const Center(
+                  child: Text("Your cart is Empty"),
+                )
+              : buildCartList(context, ref);
         },
-        child: Consumer(
-          builder: (context, ref, child) {
-            var list = ref.watch(cartLProvider);
-            return list.isEmpty
-                ? const Center(
-                    child: Text("Your cart is Empty"),
-                  )
-                : buildCartList(context, list, ref);
-          },
-        ),
       ),
     );
   }
@@ -53,9 +40,12 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Column buildCartList(BuildContext context, List<Cart> list, WidgetRef ref) {
+  Column buildCartList(BuildContext context, WidgetRef ref) {
     double price = 0;
-    ref.watch(cartLProvider).forEach((e) => price += e.price);
+    final list = ref.watch(cartLProvider);
+    for (var e in list) {
+      price += e.price;
+    }
     var formatter = NumberFormat('#,###');
     return Column(
       children: [
@@ -76,9 +66,7 @@ class _CartScreenState extends State<CartScreen> {
                         children: [
                           SlidableAction(
                             onPressed: (context) {
-                              setState(() {
-                                list.removeAt(i);
-                              });
+                              list.removeAt(i);
                             },
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,

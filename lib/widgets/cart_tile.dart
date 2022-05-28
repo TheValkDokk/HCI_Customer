@@ -5,24 +5,19 @@ import '../models/cart.dart';
 import '../screens/info.dart';
 import 'flip_stock.dart';
 
-class CartTile extends ConsumerStatefulWidget {
-  const CartTile(this.index);
+class CartTile extends ConsumerWidget {
+  CartTile(this.index);
 
   final int index;
 
-  @override
-  ConsumerState<CartTile> createState() => _CartTileState();
-}
-
-class _CartTileState extends ConsumerState<CartTile> {
   var countController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    var cart = ref.watch(cartLProvider).elementAt(widget.index);
+  Widget build(BuildContext context, WidgetRef ref) {
+    var cart = ref.watch(cartLProvider).elementAt(index);
 
     countController.text =
-        ref.watch(cartLProvider).elementAt(widget.index).quantity.toString();
+        ref.watch(cartLProvider).elementAt(index).quantity.toString();
     Size size = MediaQuery.of(context).size;
     return Container(
         height: size.height * 0.2,
@@ -40,20 +35,18 @@ class _CartTileState extends ConsumerState<CartTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
-                    child: Hero(
-                      tag: cart.drug.id,
-                      child: Image.network(
-                        height: size.height * 0.1,
-                        width: size.width * 0.4,
-                        cart.drug.imgUrl,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return const Center(
-                            child: FlipStock(),
-                          );
-                        },
-                      ),
+                    child: Image.network(
+                      height: size.height * 0.1,
+                      width: size.width * 0.4,
+                      cacheHeight: 100,
+                      cart.drug.imgUrl,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(
+                          child: FlipStock(),
+                        );
+                      },
                     ),
                   ),
                   SizedBox(
@@ -93,7 +86,7 @@ class _CartTileState extends ConsumerState<CartTile> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          ref.read(cartLProvider.notifier).inQuan(widget.index);
+                          ref.read(cartLProvider.notifier).inQuan(index);
                         },
                         icon: const Icon(
                           Icons.add_circle_outlined,
@@ -107,7 +100,7 @@ class _CartTileState extends ConsumerState<CartTile> {
                         onSubmitted: (value) {
                           ref
                               .read(cartLProvider.notifier)
-                              .setQuan(widget.index, int.parse(value));
+                              .setQuan(index, int.parse(value));
                         },
                         textAlign: TextAlign.center,
                         controller: countController,
@@ -124,9 +117,8 @@ class _CartTileState extends ConsumerState<CartTile> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () => ref
-                            .read(cartLProvider.notifier)
-                            .deQuan(widget.index),
+                        onPressed: () =>
+                            ref.read(cartLProvider.notifier).deQuan(index),
                         icon: const Icon(
                           Icons.remove_circle_outlined,
                           color: Colors.green,
@@ -141,7 +133,7 @@ class _CartTileState extends ConsumerState<CartTile> {
                   width: 30,
                 ),
                 Text(
-                  'Total: ${ref.watch(cartLProvider).elementAt(widget.index).price.toStringAsFixed(3)}',
+                  'Total: ${ref.watch(cartLProvider).elementAt(index).price.toStringAsFixed(3)}',
                   style: const TextStyle(fontSize: 15, letterSpacing: 1),
                 ),
               ],
