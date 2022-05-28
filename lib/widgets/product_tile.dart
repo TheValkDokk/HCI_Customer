@@ -44,7 +44,7 @@ class DrugTile extends StatelessWidget {
                         child: Image.network(
                           _drug.imgUrl,
                           height: 100,
-                          cacheHeight: 100,
+                          cacheHeight: 500,
                           fit: BoxFit.cover,
                           width: double.infinity,
                         ),

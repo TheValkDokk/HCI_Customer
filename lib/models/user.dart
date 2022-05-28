@@ -41,16 +41,15 @@ class PharmacyUser {
 
   factory PharmacyUser.fromMap(Map<String, dynamic> map) {
     return PharmacyUser(
-      mail: map['mail'] as String,
-      name: map['name'] as String,
-      phone: map['phone'] as String,
-      addr: map['addr'] as String,
+      mail: map['mail'] != null ? map['mail'] as String : null,
+      name: map['name'] != null ? map['name'] as String : null,
+      phone: map['phone'] != null ? map['phone'] as String : null,
+      addr: map['addr'] != null ? map['addr'] as String : null,
     );
   }
 
   factory PharmacyUser.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
   ) {
     final data = snapshot.data();
     return PharmacyUser(

@@ -12,11 +12,13 @@ class Order {
   List<Cart> listCart;
   double price;
   String status;
+  DateTime date;
   Order({
     required this.user,
     required this.listCart,
     required this.price,
     required this.status,
+    required this.date,
   });
 
   Order copyWith({
@@ -24,12 +26,14 @@ class Order {
     List<Cart>? listCart,
     double? price,
     String? status,
+    DateTime? date,
   }) {
     return Order(
       user: user ?? this.user,
       listCart: listCart ?? this.listCart,
       price: price ?? this.price,
       status: status ?? this.status,
+      date: date ?? this.date,
     );
   }
 
@@ -39,6 +43,7 @@ class Order {
       'listCart': listCart.map((x) => x.toMap()).toList(),
       'price': price,
       'status': status,
+      'date': date.millisecondsSinceEpoch,
     };
   }
 
@@ -52,6 +57,7 @@ class Order {
       ),
       price: map['price'] as double,
       status: map['status'] as String,
+      date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
     );
   }
 
@@ -62,7 +68,7 @@ class Order {
 
   @override
   String toString() {
-    return 'Order(user: $user, listCart: $listCart, price: $price, status: $status)';
+    return 'Order(user: $user, listCart: $listCart, price: $price, status: $status, date: $date)';
   }
 
   @override
@@ -73,11 +79,16 @@ class Order {
         other.user == user &&
         listEquals(other.listCart, listCart) &&
         other.price == price &&
-        other.status == status;
+        other.status == status &&
+        other.date == date;
   }
 
   @override
   int get hashCode {
-    return user.hashCode ^ listCart.hashCode ^ price.hashCode ^ status.hashCode;
+    return user.hashCode ^
+        listCart.hashCode ^
+        price.hashCode ^
+        status.hashCode ^
+        date.hashCode;
   }
 }

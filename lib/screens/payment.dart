@@ -2,12 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hci_customer/main.dart';
 import 'package:hci_customer/widgets/remove_all_dialog.dart';
 import 'package:string_validator/string_validator.dart';
 
 import '../models/cart.dart';
 import '../widgets/btnConfirmOrder.dart';
 import '../widgets/payment_tile.dart';
+
+final isFilledProvider = StateProvider((_) => false);
 
 class PaymentScreen extends ConsumerStatefulWidget {
   const PaymentScreen();
@@ -25,15 +28,39 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
   final u = FirebaseAuth.instance.currentUser!;
 
+  final _form = GlobalKey<FormState>();
+
+  bool isNameFilled = true;
+  bool isPhoneFilled = false;
+  bool isAddrFilled = false;
+  bool isFilled = false;
+
   @override
   void initState() {
     nameCtl.text = u.displayName.toString();
-    if (u.phoneNumber.toString() == 'null') {
+    if (!isPhoneNumber(u.phoneNumber.toString())) {
+      isPhoneFilled = false;
       phoneCtl.text = '';
     } else {
+      isPhoneFilled = true;
       phoneCtl.text = u.phoneNumber.toString();
     }
     addressCtl.text = '';
+
+    nameCtl.addListener(() {
+      ref.read(pharmacyUserProvider.notifier).state.name = nameCtl.text;
+
+      isFilledFunc();
+    });
+    phoneCtl.addListener(() {
+      ref.read(pharmacyUserProvider.notifier).state.phone = phoneCtl.text;
+      isFilledFunc();
+    });
+    addressCtl.addListener(() {
+      ref.read(pharmacyUserProvider.notifier).state.addr = addressCtl.text;
+      isFilledFunc();
+    });
+
     super.initState();
   }
 
@@ -45,42 +72,20 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     super.dispose();
   }
 
-  @override
-  void didChangeDependencies() {
-    if (nameCtl.text.isNotEmpty &&
-        phoneCtl.text.isNotEmpty &&
-        addressCtl.text.isNotEmpty) {
-      isFilled = true;
-    }
-    super.didChangeDependencies();
-  }
-
   bool isPhoneNumber(String input) {
     return isNumeric(input) && isLength(input, 9, 10);
   }
 
-  String? get errorTextPhoneInput {
-    if (!isPhoneNumber(phoneCtl.text)) {
-      return 'Invaild Phone Number';
-    }
-    return null;
+  bool initFill() {
+    final u = ref.watch(pharmacyUserProvider);
+    setState(() {
+      isFilled = isPhoneNumber(u.phone.toString()) ||
+          u.name.toString().isNotEmpty ||
+          u.addr.toString().isNotEmpty;
+    });
+    return isFilled;
   }
 
-  String? get errorTextNameInput {
-    if (nameCtl.text.isEmpty) {
-      return 'Empty Name';
-    }
-    return null;
-  }
-
-  String? get errorTextAddrInput {
-    if (addressCtl.text.isEmpty) {
-      return 'Empty Address';
-    }
-    return null;
-  }
-
-  bool isFilled = false;
   double price = 0;
 
   double calcTotal(List<Cart> list) {
@@ -91,6 +96,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     return price;
   }
 
+  void isFilledFunc() {
+    final u = ref.watch(pharmacyUserProvider);
+    ref.read(isFilledProvider.notifier).state =
+        isPhoneNumber(u.phone.toString()) &
+            u.name.toString().isNotEmpty &
+            u.addr.toString().isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     var cartL = ref.watch(cartLProvider);
@@ -99,6 +112,12 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       price += element.price;
     }
 
+    initFill();
+    final u = ref.watch(pharmacyUserProvider);
+    nameCtl.text = u.name!;
+    phoneCtl.text = u.phone ?? '0';
+    addressCtl.text = u.addr!;
+    print('rebuild');
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -109,20 +128,99 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                _deliveryLocation(),
+                const DeliveryWidget(),
                 const Divider(),
                 SizedBox(
                   width: size.width * 0.8,
-                  child: Column(
-                    children: [
-                      inputCusData(size, Icons.person, nameCtl, 'Full Name',
-                          TextInputType.name, false),
-                      inputCusData(size, Icons.phone, phoneCtl, 'Phone Number',
-                          TextInputType.phone, true),
-                      inputCusData(size, Icons.location_city, addressCtl,
-                          'Address', TextInputType.streetAddress, false),
-                      etaTime(size, '1 weeks'),
-                    ],
+                  child: Form(
+                    autovalidateMode: AutovalidateMode.always,
+                    key: _form,
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Icon(Icons.person,
+                                size: 25, color: Colors.green),
+                            const Spacer(),
+                            SizedBox(
+                                width: size.width * 0.7,
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (value.toString().isEmpty) {
+                                      isNameFilled = false;
+                                      return 'Empty Name';
+                                    }
+                                    isNameFilled = true;
+                                    return null;
+                                  },
+                                  controller: nameCtl,
+                                  keyboardType: TextInputType.name,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Full Name'),
+                                )),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Icon(
+                              Icons.phone,
+                              size: 25,
+                              color: Colors.green,
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                                width: size.width * 0.7,
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (!isPhoneNumber(value.toString())) {
+                                      isPhoneFilled = false;
+                                      return 'Invaild Phone Number';
+                                    }
+                                    isPhoneFilled = true;
+                                    return null;
+                                  },
+                                  controller: phoneCtl,
+                                  keyboardType: TextInputType.phone,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Phone Number'),
+                                )),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Icon(
+                              Icons.home,
+                              size: 25,
+                              color: Colors.green,
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                                width: size.width * 0.7,
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (value.toString().isEmpty) {
+                                      isAddrFilled = false;
+                                      return 'Empty Address';
+                                    }
+                                    isAddrFilled = true;
+                                    return null;
+                                  },
+                                  controller: addressCtl,
+                                  keyboardType: TextInputType.streetAddress,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Delivery Address'),
+                                )),
+                          ],
+                        ),
+                        const ETAtime('1 week')
+                      ],
+                    ),
                   ),
                 ),
                 const Divider(),
@@ -137,8 +235,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               ],
             ),
           ),
-          BtnConfirmOrder(
-              isFilled, price, nameCtl.text, phoneCtl.text, addressCtl.text),
+          BtnConfirmOrder(price),
         ],
       ),
     );
@@ -171,33 +268,6 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         );
       },
       itemCount: list.length,
-    );
-  }
-
-  Padding _deliveryLocation() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5, top: 10),
-      child: RichText(
-        text: const TextSpan(
-          children: [
-            WidgetSpan(
-              child: Icon(
-                Icons.location_on,
-                color: Colors.red,
-                size: 30,
-              ),
-            ),
-            WidgetSpan(
-              child: Text(
-                textAlign: TextAlign.left,
-                textDirection: TextDirection.ltr,
-                "    Delivery Location",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -244,8 +314,46 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       ],
     );
   }
+}
 
-  Row etaTime(Size size, String time) {
+class DeliveryWidget extends StatelessWidget {
+  const DeliveryWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5, top: 10),
+      child: RichText(
+        text: const TextSpan(
+          children: [
+            WidgetSpan(
+              child: Icon(
+                Icons.location_on,
+                color: Colors.red,
+                size: 30,
+              ),
+            ),
+            WidgetSpan(
+              child: Text(
+                textAlign: TextAlign.left,
+                textDirection: TextDirection.ltr,
+                "    Delivery Location",
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ETAtime extends StatelessWidget {
+  const ETAtime(this.time);
+  final String time;
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -265,58 +373,6 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               style: const TextStyle(letterSpacing: 1, fontSize: 17),
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Row inputCusData(Size size, IconData icon, var ctl, String hint,
-      TextInputType kbType, bool isPhone) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Icon(
-          icon,
-          size: 25,
-          color: Colors.green,
-        ),
-        const Spacer(),
-        SizedBox(
-          width: size.width * 0.7,
-          child: isPhone
-              ? TextField(
-                  controller: ctl,
-                  onChanged: (v) {
-                    if (v.isEmpty) {
-                      setState(() {
-                        isFilled = false;
-                      });
-                    }
-                  },
-                  keyboardType: kbType,
-                  decoration: InputDecoration(
-                    labelText: hint,
-                    errorText: errorTextPhoneInput,
-                  ),
-                )
-              : TextField(
-                  onChanged: (v) {
-                    if (v.isEmpty) {
-                      setState(() {
-                        isFilled = false;
-                      });
-                    }
-                  },
-                  controller: ctl,
-                  keyboardType: kbType,
-                  decoration: InputDecoration(
-                    labelText: hint,
-                    errorText: ctl == nameCtl
-                        ? errorTextNameInput
-                        : errorTextAddrInput,
-                  ),
-                ),
         ),
       ],
     );

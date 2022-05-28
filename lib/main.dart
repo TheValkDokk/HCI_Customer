@@ -12,6 +12,8 @@ import 'screens/home_drawer.dart';
 import 'screens/login_sceen.dart';
 
 final googleSignInProvider = StateProvider((_) => GoogleSignIn());
+final pharmacyUserProvider =
+    StateProvider((_) => PharmacyUser(mail: '', name: '', phone: '', addr: ''));
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,15 +25,16 @@ void main() async {
 
 final navKey = GlobalKey<NavigatorState>();
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   static const routeName = '/main';
 
   const MyApp({Key? key}) : super(key: key);
+
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> {
   final db = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,6 @@ class _MyAppState extends State<MyApp> {
       routes: {
         PaymentScreen.routeName: (context) => const PaymentScreen(),
         MyApp.routeName: (context) => const MyApp(),
-        HomeDrawer.routeName: (context) => const HomeDrawer(),
       },
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -71,22 +73,27 @@ class _MyAppState extends State<MyApp> {
   Future<void> sendUser() async {
     final u = FirebaseAuth.instance.currentUser!;
     final phone = u.phoneNumber ?? 0;
-    final user = PharmacyUser(
-        mail: u.email, name: u.displayName, phone: phone.toString(), addr: '');
-    if (!checkExist(user)) {
-      db.collection('users').doc(user.mail).set(user.toFirestore());
-    }
+    var user = PharmacyUser(
+        mail: u.email,
+        name: u.displayName,
+        phone: phone.toString(),
+        addr: 'user home');
+    checkExist(user);
   }
 
-  bool checkExist(PharmacyUser u) {
-    bool isExist = false;
-    db.collection('users').get().then((value) {
+  Future<void> checkExist(PharmacyUser u) async {
+    final userCollection = db.collection('users');
+    await userCollection.get().then((value) {
       for (var e in value.docs) {
         if (e.data()['mail'] == u.mail) {
-          isExist = true;
+          userCollection.doc(u.mail).get().then((doc) {
+            ref.read(pharmacyUserProvider.notifier).state =
+                PharmacyUser.fromFirestore(doc);
+          });
+          return;
         }
       }
+      db.collection('users').doc(u.mail).set(u.toFirestore());
     });
-    return isExist;
   }
 }

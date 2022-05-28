@@ -32,7 +32,6 @@ class DrawerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(UserProvider).currentUser;
-    print('build');
     return Theme(
       data: ThemeData.dark(),
       child: Scaffold(

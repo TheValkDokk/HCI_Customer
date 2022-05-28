@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hci_customer/models/user.dart';
 import 'package:intl/intl.dart';
 
 import '../screens/cart_screen.dart';
@@ -34,6 +35,10 @@ void sendOrder(Order order) {
   db.collection('orders').add(order.toMap());
 }
 
+void updateUser(PharmacyUser u) {
+  db.collection('users').doc(u.mail).update({'addr': u.addr, 'phone': u.phone});
+}
+
 void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
   addorInc(drug, ref, context);
 
@@ -43,8 +48,8 @@ void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
         label: 'To my Cart',
         onPressed: () {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CartScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const CartScreen()));
         },
         textColor: Colors.cyanAccent,
       ),

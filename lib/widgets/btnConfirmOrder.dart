@@ -1,27 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hci_customer/main.dart';
 
 import 'package:hci_customer/models/cart.dart';
 import 'package:hci_customer/models/order.dart';
-import 'package:hci_customer/models/user.dart';
 import 'package:hci_customer/screens/home_drawer.dart';
+import 'package:hci_customer/screens/payment.dart';
 
 import '../models/global.dart';
 import '../screens/payment_complete.dart';
 
 class BtnConfirmOrder extends ConsumerWidget {
-  const BtnConfirmOrder(
-      this.isEnable, this.price, this.name, this.phone, this.addr);
+  const BtnConfirmOrder(this.price);
 
-  final bool isEnable;
   final double price;
-  final String name;
-  final String phone;
-  final String addr;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isEnable = ref.watch(isFilledProvider);
     return Padding(
       padding: const EdgeInsets.all(15),
       child: SizedBox(
@@ -31,14 +27,18 @@ class BtnConfirmOrder extends ConsumerWidget {
           onPressed: isEnable
               ? () {
                   var list = ref.watch(cartLProvider);
-                  final u = ref.watch(UserProvider) as User;
+                  final u = ref.watch(UserProvider).currentUser!;
+                  final user = ref.watch(pharmacyUserProvider);
+
                   Order order = Order(
-                      user: PharmacyUser(
-                          mail: u.email, name: name, phone: phone, addr: addr),
-                      listCart: list,
-                      price: price,
-                      status: 'NewOrder');
+                    user: user,
+                    listCart: list,
+                    price: price,
+                    status: 'NewOrder',
+                    date: DateTime.now(),
+                  );
                   sendOrder(order);
+                  updateUser(user);
                   ref.read(cartLProvider.notifier).wipe();
                   Navigator.push(
                     context,
