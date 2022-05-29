@@ -16,9 +16,9 @@ List<Category> iconList = [
       'https://www.nhathuocankhang.com/images/newversion/home/icon_TPCN.png',
       'A2'),
   Category(
-      'Medical Supplies',
+      'Prescription Picture',
       'https://www.nhathuocankhang.com/images/newversion/home/icon_DDYT.png',
-      'A3'),
+      'camera'),
   Category(
       'Cosmetics',
       'https://www.nhathuocankhang.com/images/newversion/home/icon_Mypham.png',

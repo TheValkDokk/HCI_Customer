@@ -1,19 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hci_customer/models/user.dart';
 import 'package:hci_customer/screens/payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
+import 'provider/general_provider.dart';
 import 'screens/home_drawer.dart';
 import 'screens/login_sceen.dart';
-
-final googleSignInProvider = StateProvider((_) => GoogleSignIn());
-final pharmacyUserProvider =
-    StateProvider((_) => PharmacyUser(mail: '', name: '', phone: '', addr: ''));
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

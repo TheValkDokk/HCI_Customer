@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hci_customer/screens/presciption_screen.dart';
 
 import '../models/category.dart';
 import '../models/drugs.dart';
@@ -20,12 +21,13 @@ class ButtonDrug extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => LoadMoreScreen(
-            title: cat.title,
-            list: getType(cat.type),
-          ),
-        ),
+        MaterialPageRoute(builder: (context) {
+          if (cat.type == 'camera') {
+            return const PrescriptionScreen();
+          } else {
+            return LoadMoreScreen(title: cat.title, list: getType(cat.type));
+          }
+        }),
       ),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.17,

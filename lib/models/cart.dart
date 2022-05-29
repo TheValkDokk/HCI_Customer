@@ -68,7 +68,7 @@ class CartListNotifier extends StateNotifier<List<Cart>> {
   void calcPrice(int i) {
     final tempCart = state[i];
     tempCart.price = tempCart.quantity * tempCart.drug.price;
-    remove(state[i]);
+    removeCartAt(state[i]);
     addAt(tempCart, i);
   }
 
@@ -78,7 +78,8 @@ class CartListNotifier extends StateNotifier<List<Cart>> {
     calcPrice(i);
   }
 
-  void remove(Cart cart) {
+  void removeCartAt(Cart cart) {
+    print('remove');
     state = [
       for (final e in state)
         if (e != cart) e,
@@ -89,7 +90,7 @@ class CartListNotifier extends StateNotifier<List<Cart>> {
     final tempCart = state[i];
     tempCart.quantity--;
 
-    remove(state[i]);
+    removeCartAt(state[i]);
     if (tempCart.quantity > 0) {
       addAt(tempCart, i);
       calcPrice(i);
@@ -98,26 +99,21 @@ class CartListNotifier extends StateNotifier<List<Cart>> {
 
   void setQuan(int i, int quan) {
     if (quan <= 0) {
-      remove(state[i]);
+      removeCartAt(state[i]);
     } else {
       final tempCart = state[i];
       tempCart.quantity == quan;
-      remove(state[i]);
+      removeCartAt(state[i]);
       addAt(tempCart, i);
       calcPrice(i);
     }
   }
 
   void delete(int i) {
-    if (state[i].quantity <= 0) remove(state[i]);
+    if (state[i].quantity <= 0) removeCartAt(state[i]);
   }
 
   void wipe() {
     state = [];
   }
 }
-
-final cartLProvider =
-    StateNotifierProvider<CartListNotifier, List<Cart>>((ref) {
-  return CartListNotifier();
-});

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hci_customer/models/user.dart';
 import 'package:intl/intl.dart';
 
+import '../provider/general_provider.dart';
 import '../screens/cart_screen.dart';
 import 'cart.dart';
 import 'drugs.dart';

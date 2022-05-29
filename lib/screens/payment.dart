@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:hci_customer/main.dart';
 import 'package:hci_customer/widgets/remove_all_dialog.dart';
 import 'package:string_validator/string_validator.dart';
 
 import '../models/cart.dart';
+import '../provider/general_provider.dart';
 import '../widgets/btnConfirmOrder.dart';
 import '../widgets/payment_tile.dart';
 
@@ -252,7 +252,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             children: [
               SlidableAction(
                 onPressed: (context) {
-                  ref.read(cartLProvider.notifier).remove(list[i]);
+                  ref.read(cartLProvider.notifier).removeCartAt(list[i]);
                   if (ref.watch(cartLProvider).isEmpty) {
                     Navigator.pop(context, true);
                   }

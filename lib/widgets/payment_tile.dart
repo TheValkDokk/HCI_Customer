@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/cart.dart';
+import '../provider/general_provider.dart';
 
 class PaymentTile extends ConsumerWidget {
   const PaymentTile(this.i);
@@ -28,7 +28,7 @@ class PaymentTile extends ConsumerWidget {
           '${list[i].price.toStringAsFixed(3)} - ${list[i].quantity} ${list[i].drug.unit}'),
       trailing: IconButton(
           onPressed: () {
-            ref.read(cartLProvider.notifier).remove(list[i]);
+            ref.read(cartLProvider.notifier).removeCartAt(list[i]);
             if (ref.watch(cartLProvider).isEmpty) {
               Navigator.pop(context, true);
             }

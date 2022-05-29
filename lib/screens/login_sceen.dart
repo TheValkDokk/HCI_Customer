@@ -6,6 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hci_customer/main.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import '../provider/general_provider.dart';
+
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
 

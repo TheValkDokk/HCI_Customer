@@ -5,11 +5,9 @@ import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:hci_customer/screens/drawer.dart';
 
+import '../provider/general_provider.dart';
 import 'about.dart';
 import 'home.dart';
-
-final UserProvider = StateProvider((_) => FirebaseAuth.instance);
-final ScreenProvider = StateProvider((_) => MenuItems.home);
 
 class HomeDrawer extends ConsumerStatefulWidget {
   const HomeDrawer();
