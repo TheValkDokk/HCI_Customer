@@ -6,6 +6,7 @@ import '../models/drugs.dart';
 import '../models/global.dart';
 import '../widgets/product_tile.dart';
 import 'cart_screen.dart';
+import 'nearby.dart';
 
 class InfoScreen extends ConsumerWidget {
   const InfoScreen(this._drug);
@@ -147,6 +148,25 @@ class InfoScreen extends ConsumerWidget {
                     style: const TextStyle(fontSize: 17),
                   )
                 ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () =>
+                Navigator.of(context).pushNamed(NearbyStoreScreen.routeName),
+            child: const Padding(
+              padding: EdgeInsets.all(15),
+              child: SizedBox(
+                height: 18,
+                width: double.infinity,
+                child: Text(
+                  'Nearby Stores',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
               ),
             ),
           ),

@@ -5,12 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_zoom_drawer/config.dart';
-import 'package:hci_customer/models/cart.dart';
-import 'package:hci_customer/screens/home_drawer.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../main.dart';
 import '../provider/general_provider.dart';
+import 'presciption_screen.dart';
 
 class MenuItemDra {
   final String title;
@@ -88,6 +87,10 @@ class DrawerScreen extends ConsumerWidget {
                       await FirebaseAuth.instance.signOut();
                       ref.invalidate(cartLProvider);
                       ref.invalidate(googleSignInProvider);
+                      ref.invalidate(UserProvider);
+                      ref.invalidate(ScreenProvider);
+                      ref.invalidate(pharmacyUserProvider);
+                      ref.invalidate(ImgPath);
                       navKey.currentState!.popUntil((route) => route.isFirst);
                     },
                     minLeadingWidth: 20,

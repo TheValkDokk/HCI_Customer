@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hci_customer/models/user.dart';
+import 'package:hci_customer/screens/nearby.dart';
 import 'package:hci_customer/screens/payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -47,6 +48,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       routes: {
         PaymentScreen.routeName: (context) => const PaymentScreen(),
         MyApp.routeName: (context) => const MyApp(),
+        NearbyStoreScreen.routeName: (context) => const NearbyStoreScreen(),
       },
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -69,6 +71,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Future<void> sendUser() async {
     final u = FirebaseAuth.instance.currentUser!;
     final phone = u.phoneNumber ?? 0;
+    print(u.displayName);
     var user = PharmacyUser(
         mail: u.email,
         name: u.displayName,
@@ -83,13 +86,13 @@ class _MyAppState extends ConsumerState<MyApp> {
       for (var e in value.docs) {
         if (e.data()['mail'] == u.mail) {
           userCollection.doc(u.mail).get().then((doc) {
-            ref.read(pharmacyUserProvider.notifier).state =
+            u = ref.read(pharmacyUserProvider.notifier).state =
                 PharmacyUser.fromFirestore(doc);
           });
           return;
         }
       }
-      db.collection('users').doc(u.mail).set(u.toFirestore());
+      userCollection.doc(u.mail).set(u.toFirestore());
     });
   }
 }

@@ -46,6 +46,8 @@ class _CameraDrugState extends ConsumerState<CameraDrug> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    double height = size.height * 0.45;
+    double width = size.width * 0.7;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -54,14 +56,14 @@ class _CameraDrugState extends ConsumerState<CameraDrug> {
             child: Center(
               child: image != null
                   ? SizedBox(
-                      width: size.width * 0.7,
-                      height: size.height * 0.45,
+                      width: width,
+                      height: height,
                       child: Image.file(image!),
                     )
                   : Container(
                       color: Colors.grey,
-                      width: size.width * 0.7,
-                      height: size.height * 0.5,
+                      width: width,
+                      height: height,
                       child: const Icon(Icons.image),
                     ),
             ),

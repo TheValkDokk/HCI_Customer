@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hci_customer/models/global.dart';
 import 'package:hci_customer/models/prescription.dart';
 import 'package:hci_customer/provider/general_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,8 +13,7 @@ import '../screens/payment_complete.dart';
 import '../screens/presciption_screen.dart';
 
 class PrescriptionInfo extends ConsumerStatefulWidget {
-  const PrescriptionInfo(this.onClicked);
-  final Function onClicked;
+  const PrescriptionInfo();
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -23,6 +23,8 @@ class PrescriptionInfo extends ConsumerStatefulWidget {
 class _PrescriptionInfoState extends ConsumerState<PrescriptionInfo> {
   final nameCtl = TextEditingController();
   final addrCtl = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String mail = '';
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _PrescriptionInfoState extends ConsumerState<PrescriptionInfo> {
     return SizedBox(
       width: size.width * 0.8,
       child: Form(
+        key: _formKey,
         child: Column(
           children: [
             const SizedBox(height: 10),
@@ -50,7 +53,7 @@ class _PrescriptionInfoState extends ConsumerState<PrescriptionInfo> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      ref.watch(UserProvider).currentUser!.email ?? '',
+                      mail = ref.watch(UserProvider).currentUser!.email ?? '',
                       style: const TextStyle(fontSize: 20, letterSpacing: 1),
                     )
                   ],
@@ -59,6 +62,7 @@ class _PrescriptionInfoState extends ConsumerState<PrescriptionInfo> {
             ),
             const SizedBox(height: 10),
             TextFormField(
+              controller: nameCtl,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter Patient Name';
@@ -69,6 +73,7 @@ class _PrescriptionInfoState extends ConsumerState<PrescriptionInfo> {
             ),
             const SizedBox(height: 10),
             TextFormField(
+              controller: addrCtl,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter Address';
@@ -90,7 +95,11 @@ class _PrescriptionInfoState extends ConsumerState<PrescriptionInfo> {
                     ),
                   ),
                 ),
-                onPressed: uploadImg,
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    uploadImg();
+                  }
+                },
                 child: const Text(
                   'Send',
                   style: TextStyle(color: Colors.white),
@@ -98,7 +107,6 @@ class _PrescriptionInfoState extends ConsumerState<PrescriptionInfo> {
               ),
             ),
             const SizedBox(height: 10),
-            const Text('We will contact you after we receive the presciption'),
           ],
         ),
       ),
@@ -113,17 +121,25 @@ class _PrescriptionInfoState extends ConsumerState<PrescriptionInfo> {
         mail: FirebaseAuth.instance.currentUser!.email.toString(),
         Imgurl: value,
       );
-      print(prescrip.toString());
       if (!mounted) return;
       if (value.length > 10) {
+        uploadPrescipInfo(prescrip);
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const PaymentCompleteScreen(),
           ),
         );
+        ref.invalidate(ImgPath);
       }
     });
+  }
+
+  Future<void> uploadPrescipInfo(Prescription prescrip) async {
+    final preCollection = db.collection('prescription');
+    await preCollection.doc(mail).get().then((value) => print(value.data()));
+    //preCollection.doc(mail).collection('1').add(prescrip.toMap());
   }
 }
 
@@ -134,15 +150,49 @@ class SendPresciprClass {
 
   Future<void> myAsyncMethod(BuildContext context, Function onSuccess) async {
     UploadTask? uploadTask;
-    final file = File(xfile!.path);
-    final path = 'prescription/${xfile!.name}';
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                CircularProgressIndicator(),
+                Text("Loading"),
+              ],
+            ),
+          );
+        },
+      );
+      final file = File(xfile!.path);
+      final path = 'prescription/${xfile!.name}';
 
-    final send = FirebaseStorage.instance.ref().child(path);
-    uploadTask = send.putFile(file);
+      final send = FirebaseStorage.instance.ref().child(path);
+      uploadTask = send.putFile(file);
 
-    final snapshot = await uploadTask.whenComplete(() {});
+      final snapshot = await uploadTask.whenComplete(() {});
 
-    String url = await snapshot.ref.getDownloadURL();
-    onSuccess(url);
+      String url = await snapshot.ref.getDownloadURL();
+      onSuccess(url);
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                int count = 0;
+                Navigator.of(context).popUntil((_) => count++ >= 2);
+              },
+              child: const Text('OK'),
+            )
+          ],
+          content: const Text('Please select or take the Drug\'s Presription'),
+          title: const Text('Warning'),
+        ),
+      );
+    }
   }
 }

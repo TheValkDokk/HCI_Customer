@@ -31,11 +31,10 @@ class _PrescriptionScreenState extends ConsumerState<PrescriptionScreen> {
         body: SingleChildScrollView(
           child: Center(
             child: Column(
-              children: [
-                const CameraDrug(),
-                PrescriptionInfo((value) {
-                  a = value;
-                }),
+              children: const [
+                CameraDrug(),
+                PrescriptionInfo(),
+                Text('We will contact you after we receive the presciption'),
               ],
             ),
           ),
