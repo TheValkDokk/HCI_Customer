@@ -1,47 +1,46 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hci_customer/widgets/camera_container.dart';
+import 'package:image_picker/image_picker.dart';
 
-class PrescriptionScreen extends StatefulWidget {
+import '../widgets/PresciprtionInfo.dart';
+
+final ImgPath = StateProvider(((ref) => XFile('')));
+
+class PrescriptionScreen extends ConsumerStatefulWidget {
   const PrescriptionScreen({Key? key}) : super(key: key);
 
   @override
-  State<PrescriptionScreen> createState() => _PrescriptionScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PrescriptionScreenState();
 }
 
-class _PrescriptionScreenState extends State<PrescriptionScreen> {
-  late final cameras;
-
-  Future<List<CameraDescription>> callCamera() async {
-    return await availableCameras().then((value) => cameras = value);
-  }
+class _PrescriptionScreenState extends ConsumerState<PrescriptionScreen> {
+  String a = 'f';
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Prescription'),
-        centerTitle: true,
-        backgroundColor: Colors.green,
+    return SafeArea(
+      child: Scaffold(
+        // resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: const Text('Prescription'),
+          centerTitle: true,
+          backgroundColor: Colors.green,
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                const CameraDrug(),
+                PrescriptionInfo((value) {
+                  a = value;
+                }),
+              ],
+            ),
+          ),
+        ),
       ),
-      body: FutureBuilder(
-          future: callCamera(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasData) {
-              return Center(
-                child: CameraDrug(cameras),
-              );
-            } else {
-              return const Center(
-                child: Text('No Camera'),
-              );
-            }
-          }),
     );
   }
 }

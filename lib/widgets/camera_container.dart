@@ -1,29 +1,27 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hci_customer/screens/presciption_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CameraDrug extends StatefulWidget {
-  const CameraDrug(this.cameras);
-
-  final List<CameraDescription>? cameras;
+class CameraDrug extends ConsumerStatefulWidget {
+  const CameraDrug();
 
   @override
-  State<CameraDrug> createState() => _CameraDrugState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CameraDrugState();
 }
 
-class _CameraDrugState extends State<CameraDrug> {
-  late CameraController controller;
+class _CameraDrugState extends ConsumerState<CameraDrug> {
   File? image;
 
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
-
       final imageTemp = File(image.path);
+      ref.read(ImgPath.notifier).state = image;
       setState(() {
         this.image = imageTemp;
       });
@@ -34,10 +32,9 @@ class _CameraDrugState extends State<CameraDrug> {
 
   Future takePicture() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-
-      final imageTemp = File(image.path);
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      final imageTemp = File(image!.path);
+      ref.read(ImgPath.notifier).state = image;
       setState(() {
         this.image = imageTemp;
       });
@@ -47,91 +44,74 @@ class _CameraDrugState extends State<CameraDrug> {
   }
 
   @override
-  void initState() {
-    controller = CameraController(widget.cameras![0], ResolutionPreset.max);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if (!controller.value.isInitialized) {
-      return const Center(
-        child: Text('Please allow use of Camera Permission'),
-      );
-    }
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: SizedBox(
-              width: size.width * 0.8,
-              height: size.height * 0.6,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Center(
               child: image != null
-                  ? Image.file(image!)
-                  : CameraPreview(controller),
+                  ? SizedBox(
+                      width: size.width * 0.7,
+                      height: size.height * 0.45,
+                      child: Image.file(image!),
+                    )
+                  : Container(
+                      color: Colors.grey,
+                      width: size.width * 0.7,
+                      height: size.height * 0.5,
+                      child: const Icon(Icons.image),
+                    ),
             ),
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            imageButton('pick'),
-            imageButton('take'),
-          ],
-        ),
-        // if (pictureFile != null) Image.network(pictureFile!.path)
-        //if (pictureFile != null) Image.network(pictureFile!.path)
-      ],
-    );
-  }
-}
-
-class imageButton extends StatelessWidget {
-  imageButton(this.type);
-
-  final String type;
-
-  final _CameraDrugState obj = _CameraDrugState();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: SizedBox(
-        height: 50,
-        width: 180,
-        child: ElevatedButton.icon(
-          onPressed: () async {
-            type == 'pick' ? obj.pickImage() : obj.takePicture();
-          },
-          icon: type == 'pick'
-              ? const Icon(Icons.image_outlined)
-              : const Icon(Icons.camera),
-          label: Text(type == 'pick' ? 'Pick Image' : 'Take Image'),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
-                type == 'pick' ? Colors.blue : Colors.green),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: SizedBox(
+                  height: 50,
+                  width: 180,
+                  child: ElevatedButton.icon(
+                    onPressed: () => pickImage(),
+                    icon: const Icon(Icons.image_outlined),
+                    label: const Text('Pick Image'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.blue),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: SizedBox(
+                  height: 50,
+                  width: 180,
+                  child: ElevatedButton.icon(
+                    onPressed: () => takePicture(),
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Take Picture'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.green),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-        ),
+        ],
       ),
     );
   }
