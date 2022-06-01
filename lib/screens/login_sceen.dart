@@ -54,7 +54,7 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Future signInWithGoogle(BuildContext context, var gg) async {
+  Future signInWithGoogle(BuildContext context, GoogleSignIn gg) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     if (kIsWeb) {
@@ -77,8 +77,14 @@ class LoginScreen extends ConsumerWidget {
     } else {
       try {
         final ggSignIn = gg;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
         final GoogleSignInAccount? googleUser = await ggSignIn.signIn();
-
         final GoogleSignInAuthentication? googleAuth =
             await googleUser?.authentication;
 

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hci_customer/screens/presciption_screen.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class CameraDrug extends ConsumerStatefulWidget {
   const CameraDrug();
@@ -91,26 +92,29 @@ class _CameraDrugState extends ConsumerState<CameraDrug> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: SizedBox(
-                  height: 50,
-                  width: 180,
-                  child: ElevatedButton.icon(
-                    onPressed: () => takePicture(),
-                    icon: const Icon(Icons.camera_alt),
-                    label: const Text('Take Picture'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.green),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
+              if (!kIsWeb)
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: SizedBox(
+                    height: 50,
+                    width: 180,
+                    child: ElevatedButton.icon(
+                      onPressed: () => takePicture(),
+                      icon: const Icon(Icons.camera_alt),
+                      label: const Text('Take Picture'),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.green),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              )
+                )
             ],
           ),
         ],

@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:hci_customer/models/global.dart';
 
 import '../main.dart';
 import '../provider/general_provider.dart';
-import 'presciption_screen.dart';
 
 class MenuItemDra {
   final String title;
@@ -85,12 +85,7 @@ class DrawerScreen extends ConsumerWidget {
                         ref.watch(googleSignInProvider).signOut();
                       }
                       await FirebaseAuth.instance.signOut();
-                      ref.invalidate(cartLProvider);
-                      ref.invalidate(googleSignInProvider);
-                      ref.invalidate(UserProvider);
-                      ref.invalidate(ScreenProvider);
-                      ref.invalidate(pharmacyUserProvider);
-                      ref.invalidate(ImgPath);
+                      wipeData(ref);
                       navKey.currentState!.popUntil((route) => route.isFirst);
                     },
                     minLeadingWidth: 20,

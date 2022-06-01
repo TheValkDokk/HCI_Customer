@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hci_customer/screens/drawer.dart';
 
 import '../provider/general_provider.dart';
@@ -29,21 +31,41 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
     });
   }
 
+  int backPressCounter = 0;
+  int backPressTotal = 1;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.green.shade400,
-      child: ZoomDrawer(
-        slideWidth: MediaQuery.of(context).size.width * 0.7,
-        controller: _drawerController,
-        borderRadius: 24.0,
-        showShadow: true,
-        mainScreenTapClose: true,
-        androidCloseOnBackTap: true,
-        drawerShadowsBackgroundColor: Colors.green,
-        openCurve: Curves.fastOutSlowIn,
-        mainScreen: getScreen(),
-        menuScreen: DrawerScreen(_drawerController),
+    return Scaffold(
+      backgroundColor: Colors.green.shade400,
+      body: WillPopScope(
+        onWillPop: () async {
+          if (backPressCounter < 1) {
+            Fluttertoast.showToast(
+                msg:
+                    "Press ${backPressTotal - backPressCounter} time to exit app");
+            backPressCounter++;
+            Future.delayed(const Duration(seconds: 1, milliseconds: 500), () {
+              backPressCounter--;
+            });
+            return Future.value(false);
+          } else {
+            SystemNavigator.pop();
+            return Future.value(true);
+          }
+        },
+        child: ZoomDrawer(
+          slideWidth: MediaQuery.of(context).size.width * 0.7,
+          controller: _drawerController,
+          borderRadius: 24.0,
+          showShadow: true,
+          mainScreenTapClose: true,
+          androidCloseOnBackTap: true,
+          drawerShadowsBackgroundColor: Colors.green,
+          openCurve: Curves.fastOutSlowIn,
+          mainScreen: getScreen(),
+          menuScreen: DrawerScreen(_drawerController),
+        ),
       ),
     );
   }
@@ -57,6 +79,20 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
         return const AboutScreen();
       default:
         return HomeScreen(_drawerController);
+    }
+  }
+
+  Future<bool> onWillPop() {
+    if (backPressCounter < 2) {
+      Fluttertoast.showToast(
+          msg: "Press ${backPressTotal - backPressCounter} time to exit app");
+      backPressCounter++;
+      Future.delayed(const Duration(seconds: 1, milliseconds: 500), () {
+        backPressCounter--;
+      });
+      return Future.value(false);
+    } else {
+      return Future.value(true);
     }
   }
 }

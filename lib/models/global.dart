@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../provider/general_provider.dart';
 import '../screens/cart_screen.dart';
+import '../screens/presciption_screen.dart';
 import 'cart.dart';
 import 'drugs.dart';
 import 'order.dart';
@@ -69,4 +70,13 @@ void showAddedMsg(BuildContext context, Drug drug, WidgetRef ref) {
       backgroundColor: Colors.green,
     ),
   );
+}
+
+void wipeData(WidgetRef ref) {
+  ref.invalidate(cartLProvider);
+  ref.invalidate(googleSignInProvider);
+  ref.invalidate(UserProvider);
+  ref.invalidate(ScreenProvider);
+  ref.invalidate(pharmacyUserProvider);
+  ref.invalidate(ImgPath);
 }

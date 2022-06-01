@@ -22,17 +22,10 @@ void main() async {
 
 final navKey = GlobalKey<NavigatorState>();
 
-class MyApp extends ConsumerStatefulWidget {
+class MyApp extends StatelessWidget {
   static const routeName = '/main';
 
   const MyApp({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
-}
-
-class _MyAppState extends ConsumerState<MyApp> {
-  final db = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -50,23 +43,20 @@ class _MyAppState extends ConsumerState<MyApp> {
         MyApp.routeName: (context) => const MyApp(),
         NearbyStoreScreen.routeName: (context) => const NearbyStoreScreen(),
       },
-      home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snap) {
-          if (snap.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snap.hasData) {
-            sendUser();
-            return const HomeDrawer();
-          } else {
-            return const LoginScreen();
-          }
-        },
-      ),
+      home: const MainAppBuilder(),
     );
   }
+}
+
+class MainAppBuilder extends ConsumerStatefulWidget {
+  const MainAppBuilder();
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _MainAppBuilderState();
+}
+
+class _MainAppBuilderState extends ConsumerState<MainAppBuilder> {
+  final db = FirebaseFirestore.instance;
 
   Future<void> sendUser() async {
     final u = FirebaseAuth.instance.currentUser!;
@@ -94,5 +84,22 @@ class _MyAppState extends ConsumerState<MyApp> {
       }
       userCollection.doc(u.mail).set(u.toFirestore());
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snap.hasData) {
+          sendUser();
+          return const HomeDrawer();
+        } else {
+          return const LoginScreen();
+        }
+      },
+    );
   }
 }
