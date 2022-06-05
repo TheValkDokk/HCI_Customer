@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
 import '../screens/cart_screen.dart';
 
 class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
-  const HomeAppBar(this.drawerController);
-
-  final ZoomDrawerController drawerController;
+  const HomeAppBar();
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       leading: IconButton(
-        onPressed: () => drawerController.toggle!(),
+        onPressed: () => ZoomDrawer.of(context)!.toggle(),
         icon: const Icon(Icons.menu_rounded),
       ),
       title: const Text("Pharmacy"),
@@ -25,7 +24,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CartScreen(),
+                builder: (context) => const CartScreen(),
               ),
             );
           },

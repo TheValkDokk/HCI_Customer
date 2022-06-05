@@ -137,9 +137,7 @@ class _PrescriptionInfoState extends ConsumerState<PrescriptionInfo> {
   }
 
   Future<void> uploadPrescipInfo(Prescription prescrip) async {
-    final preCollection = db.collection('prescription');
-    await preCollection.doc(mail).get().then((value) => print(value.data()));
-    //preCollection.doc(mail).collection('1').add(prescrip.toMap());
+    await db.collection('prescription').add(prescrip.toMap());
   }
 }
 
@@ -156,12 +154,18 @@ class SendPresciprClass {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return Dialog(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                CircularProgressIndicator(),
-                Text("Loading"),
-              ],
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              width: MediaQuery.of(context).size.width * 0.8,
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(20)),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  CircularProgressIndicator(),
+                  Text("Loading"),
+                ],
+              ),
             ),
           );
         },

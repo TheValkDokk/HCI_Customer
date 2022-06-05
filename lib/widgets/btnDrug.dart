@@ -1,11 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hci_customer/screens/presciption_screen.dart';
 
 import '../models/category.dart';
 import '../models/drugs.dart';
 import '../screens/load_more.dart';
-import 'flip_stock.dart';
 
 class ButtonDrug extends StatelessWidget {
   const ButtonDrug(this.cat);
@@ -29,28 +27,25 @@ class ButtonDrug extends StatelessWidget {
           }
         }),
       ),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.17,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 50,
-              width: 50,
-              child: ClipRRect(
-                child: CachedNetworkImage(
-                  imageUrl: cat.url,
-                  placeholder: (context, url) => const FlipStock(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
-              ),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: ListTile(
+          shape: RoundedRectangleBorder(
+              side: const BorderSide(color: Colors.black, width: 1),
+              borderRadius: BorderRadius.circular(5)),
+          leading: SizedBox(
+            height: 50,
+            width: 50,
+            child: ClipRRect(
+              child: Icon(cat.url, color: Colors.green),
             ),
-            Text(
-              textAlign: TextAlign.center,
-              cat.title,
-              maxLines: 2,
-              style: const TextStyle(wordSpacing: 1, fontSize: 12.5),
-            ),
-          ],
+          ),
+          title: Text(
+            textAlign: TextAlign.center,
+            cat.title,
+            maxLines: 2,
+            style: const TextStyle(wordSpacing: 1, fontSize: 14),
+          ),
         ),
       ),
     );

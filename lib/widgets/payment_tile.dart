@@ -27,16 +27,17 @@ class PaymentTile extends ConsumerWidget {
       subtitle: Text(
           '${list[i].price.toStringAsFixed(3)} - ${list[i].quantity} ${list[i].drug.unit}'),
       trailing: IconButton(
-          onPressed: () {
-            ref.read(cartLProvider.notifier).removeCartAt(list[i]);
-            if (ref.watch(cartLProvider).isEmpty) {
-              Navigator.pop(context, true);
-            }
-          },
-          icon: const Icon(
-            Icons.remove_circle,
-            color: Colors.red,
-          )),
+        onPressed: () {
+          ref.read(cartLProvider.notifier).removeCartAt(list[i]);
+          if (ref.watch(cartLProvider).isEmpty) {
+            Navigator.pop(context, true);
+          }
+        },
+        icon: const Icon(
+          Icons.remove_circle,
+          color: Colors.red,
+        ),
+      ),
     );
   }
 }

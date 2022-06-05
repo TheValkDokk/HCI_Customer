@@ -8,6 +8,7 @@ import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:hci_customer/models/global.dart';
 
+import '../icons/my_flutter_app_icons.dart';
 import '../main.dart';
 import '../provider/general_provider.dart';
 
@@ -19,9 +20,12 @@ class MenuItemDra {
 
 class MenuItems {
   static const home = MenuItemDra('Home', Icons.home);
+  static const orders = MenuItemDra('My Orders', Icons.shopping_bag);
+  static const prescrip =
+      MenuItemDra('My Prescription', MyFlutterApp.prescription_bottle);
   static const about = MenuItemDra('About Us', Icons.info_outline_rounded);
 
-  static const all = <MenuItemDra>[home, about];
+  static const all = <MenuItemDra>[home, orders, prescrip, about];
 }
 
 class DrawerScreen extends ConsumerWidget {

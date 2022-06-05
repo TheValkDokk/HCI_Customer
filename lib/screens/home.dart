@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/config.dart';
 import '../models/category.dart';
 import '../models/drugs.dart';
 import '../widgets/btnDrug.dart';
@@ -9,9 +8,7 @@ import 'load_more.dart';
 import 'search_dialog.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen(this._drawerController);
-
-  final ZoomDrawerController _drawerController;
+  HomeScreen();
 
   static const routeName = 'home';
 
@@ -27,7 +24,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.green,
         child: const Icon(Icons.search),
       ),
-      appBar: HomeAppBar(_drawerController),
+      appBar: const HomeAppBar(),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -115,12 +112,17 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Padding _WidgetBtnGroup(bool isPhone, BuildContext context) {
+  Widget _WidgetBtnGroup(bool isPhone, BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 15),
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: isPhone ? 10 : MediaQuery.of(context).size.width * 0.02,
+      padding: const EdgeInsets.only(top: 10),
+      child: GridView(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 3,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
         children: [...iconList.map((e) => ButtonDrug(e)).toList()],
       ),
     );

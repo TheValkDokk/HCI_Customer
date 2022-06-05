@@ -6,10 +6,12 @@ import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hci_customer/screens/drawer.dart';
+import 'package:hci_customer/screens/order_history.dart';
 
 import '../provider/general_provider.dart';
 import 'about.dart';
 import 'home.dart';
+import 'prescription_histoy.dart';
 
 class HomeDrawer extends ConsumerStatefulWidget {
   const HomeDrawer();
@@ -74,11 +76,15 @@ class _HomeDrawerState extends ConsumerState<HomeDrawer> {
     final currentScreen = ref.watch(ScreenProvider);
     switch (currentScreen) {
       case MenuItems.home:
-        return HomeScreen(_drawerController);
+        return HomeScreen();
       case MenuItems.about:
         return const AboutScreen();
+      case MenuItems.orders:
+        return const OrderHistoryScreen();
+      case MenuItems.prescrip:
+        return const PresciptionHistoryScree();
       default:
-        return HomeScreen(_drawerController);
+        return HomeScreen();
     }
   }
 

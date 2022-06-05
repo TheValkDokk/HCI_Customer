@@ -13,6 +13,7 @@ class Order {
   double price;
   String status;
   DateTime date;
+
   Order({
     required this.user,
     required this.listCart,
@@ -51,7 +52,7 @@ class Order {
     return Order(
       user: PharmacyUser.fromMap(map['user'] as Map<String, dynamic>),
       listCart: List<Cart>.from(
-        (map['listCart'] as List<int>).map<Cart>(
+        (map['listCart'] as List<dynamic>).map<Cart>(
           (x) => Cart.fromMap(x as Map<String, dynamic>),
         ),
       ),
