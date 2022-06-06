@@ -63,7 +63,7 @@ class DrugTile extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                              text: " ${_drug.rating}",
+                              text: " ${_drug.rating.toStringAsFixed(1)}",
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 16),
                             ),

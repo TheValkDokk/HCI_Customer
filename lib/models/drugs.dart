@@ -6,7 +6,7 @@ class Drug {
   String fullName;
   String id;
   String unit;
-  double price;
+  num price;
   String imgUrl;
   String type;
   String ingredients;
@@ -29,29 +29,12 @@ class Drug {
     required this.container,
   });
 
-  factory Drug.fromMap(Map<String, dynamic> map) {
-    return Drug(
-      title: map['title'] as String,
-      fullName: map['fullName'] as String,
-      id: map['id'] as String,
-      unit: map['unit'] as String,
-      price: map['price'] as double,
-      imgUrl: map['imgUrl'] as String,
-      type: map['type'] as String,
-      ingredients: map['ingredients'] as String,
-      uses: map['uses'] as String,
-      rating: map['rating'] as double,
-      brought: map['brought'] as int,
-      container: map['container'] as String,
-    );
-  }
-
   Drug copyWith({
     String? title,
     String? fullName,
     String? id,
     String? unit,
-    double? price,
+    num? price,
     String? imgUrl,
     String? type,
     String? ingredients,
@@ -91,6 +74,23 @@ class Drug {
       'brought': brought,
       'container': container,
     };
+  }
+
+  factory Drug.fromMap(Map<String, dynamic> map) {
+    return Drug(
+      title: map['title'] as String,
+      fullName: map['fullName'] as String,
+      id: map['id'] as String,
+      unit: map['unit'] as String,
+      price: map['price'] as num,
+      imgUrl: map['imgUrl'] as String,
+      type: map['type'] as String,
+      ingredients: map['ingredients'] as String,
+      uses: map['uses'] as String,
+      rating: map['rating'] as double,
+      brought: map['brought'] as int,
+      container: map['container'] as String,
+    );
   }
 
   String toJson() => json.encode(toMap());

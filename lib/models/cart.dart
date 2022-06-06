@@ -8,7 +8,7 @@ import 'drugs.dart';
 class Cart {
   Drug drug;
   int quantity;
-  double price;
+  num price;
   Cart({
     required this.drug,
     required this.quantity,
@@ -21,7 +21,7 @@ class Cart {
   Cart copyWith({
     Drug? drug,
     int? quantity,
-    double? price,
+    num? price,
   }) {
     return Cart(
       drug: drug ?? this.drug,
@@ -42,7 +42,7 @@ class Cart {
     return Cart(
       drug: Drug.fromMap(map['drug'] as Map<String, dynamic>),
       quantity: map['quantity'] as int,
-      price: map['price'] as double,
+      price: map['price'] as num,
     );
   }
 
