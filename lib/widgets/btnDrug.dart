@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hci_customer/screens/home.dart';
 import 'package:hci_customer/screens/presciption_screen.dart';
 
 import '../models/category.dart';
 import '../models/drugs.dart';
 import '../screens/load_more.dart';
 
-class ButtonDrug extends StatelessWidget {
+class ButtonDrug extends ConsumerWidget {
   const ButtonDrug(this.cat);
 
   final Category cat;
 
-  List<Drug> getType(String type) {
-    return listDrug.where((e) => e.type == type).toList();
+  List<Drug> getType(String type, WidgetRef ref) {
+    return ref
+        .watch(listDrugDataProvider)
+        .where((e) => e.type == type)
+        .toList();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
@@ -23,7 +28,8 @@ class ButtonDrug extends StatelessWidget {
           if (cat.type == 'camera') {
             return const PrescriptionScreen();
           } else {
-            return LoadMoreScreen(title: cat.title, list: getType(cat.type));
+            return LoadMoreScreen(
+                title: cat.title, list: getType(cat.type, ref));
           }
         }),
       ),

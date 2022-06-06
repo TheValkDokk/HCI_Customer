@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/category.dart';
 import '../models/drugs.dart';
 import '../widgets/btnDrug.dart';
@@ -7,44 +9,66 @@ import '../widgets/smallGrid.dart';
 import 'load_more.dart';
 import 'search_dialog.dart';
 
-class HomeScreen extends StatelessWidget {
+final listDrugDataProvider = StateProvider<List<Drug>>((_) => []);
+
+class HomeScreen extends ConsumerWidget {
   HomeScreen();
 
   static const routeName = 'home';
 
   bool isTop = false;
 
+  int a = 0;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.of(context).size;
     bool isPhone = size.shortestSide < 650 ? true : false;
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showSearchDialog(size, context),
-        backgroundColor: Colors.green,
-        child: const Icon(Icons.search),
-      ),
-      appBar: const HomeAppBar(),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('drugs').snapshots(),
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState != ConnectionState.active) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (!snapshot.hasData) {
+          return const Center(
+            child: Text('Empty Drug'),
+          );
+        } else {
+          List<Drug> listDrug = snapshot.data!.docs
+              .map((e) => Drug.fromMap(e.data() as Map<String, dynamic>))
+              .toList();
+          return Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => showSearchDialog(size, context, listDrug),
+              backgroundColor: Colors.green,
+              child: const Icon(Icons.search),
+            ),
+            appBar: const HomeAppBar(),
+            body: Stack(
               children: [
-                _WidgetBtnGroup(isPhone, context),
-                const SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: _HomeBody(context, isPhone, size),
-                )
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _WidgetBtnGroup(isPhone, context),
+                      const SizedBox(height: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: _HomeBody(context, isPhone, size, listDrug),
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
+          );
+        }
+      },
     );
   }
 
-  void showSearchDialog(Size size, BuildContext context) {
+  void showSearchDialog(Size size, BuildContext context, var list) {
     showGeneralDialog(
       context: context,
       barrierLabel: "Barrier",
@@ -52,7 +76,6 @@ class HomeScreen extends StatelessWidget {
       barrierColor: Colors.black.withOpacity(0.5),
       transitionDuration: const Duration(milliseconds: 500),
       pageBuilder: (_, __, ___) {
-        var list = listDrug;
         return SearchDialog(list: list);
       },
       transitionBuilder: (_, anim, __, child) {
@@ -74,10 +97,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Column _HomeBody(BuildContext context, bool isPhone, Size size) {
-    var listA1 = listDrug.where((e) => e.type == 'A1').toList();
-    var listA2 = listDrug.where((e) => e.type == 'A2').toList();
-
+  Widget _HomeBody(
+      BuildContext context, bool isPhone, Size size, List<Drug> list) {
+    final listA1 = list.where((e) => e.type == 'A1').toList();
+    final listA2 = list.where((e) => e.type == 'A2').toList();
     return Column(
       children: [
         _toLoadMoreScreen(context, listA1, 'Unprescribed Drugs'),

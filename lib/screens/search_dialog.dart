@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hci_customer/screens/home.dart';
 import 'package:searchfield/searchfield.dart';
 
 import '../models/drugs.dart';
 import 'info.dart';
 
-class SearchDialog extends StatefulWidget {
+class SearchDialog extends ConsumerStatefulWidget {
   const SearchDialog({
     Key? key,
     required this.list,
@@ -13,12 +15,13 @@ class SearchDialog extends StatefulWidget {
   final List<Drug> list;
 
   @override
-  State<SearchDialog> createState() => SearchDialogState();
+  ConsumerState<ConsumerStatefulWidget> createState() => SearchDialogState();
 }
 
-class SearchDialogState extends State<SearchDialog> {
+class SearchDialogState extends ConsumerState<SearchDialog> {
   var searchController = TextEditingController();
   List<Drug> searchedList = [];
+  List<Drug> listDrug = [];
 
   List<Drug> filterList(String val) {
     val = val.replaceAll('thuốc', '');
@@ -37,6 +40,7 @@ class SearchDialogState extends State<SearchDialog> {
   void initState() {
     super.initState();
     myFocusNode.requestFocus();
+    listDrug = ref.watch(listDrugDataProvider);
     searchController.addListener(() {
       setState(() {
         searchedList = filterList(searchController.text);

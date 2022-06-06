@@ -16,7 +16,7 @@ class InfoScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.of(context).size;
     bool isPhone = size.shortestSide < 650 ? true : false;
-    var list = listDrug.where((e) => e.type == _drug.type).toList();
+    var list = ref.watch(listDrugDataProvider);
     list.removeWhere((e) => e.id == _drug.id);
     return Scaffold(
       appBar: AppBar(
