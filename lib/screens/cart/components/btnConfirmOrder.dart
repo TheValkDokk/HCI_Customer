@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:hci_customer/models/order.dart';
-import 'package:hci_customer/screens/payment.dart';
+import 'package:hci_customer/screens/payment/payment.dart';
 
-import '../models/global.dart';
-import '../provider/general_provider.dart';
-import '../screens/payment_complete.dart';
+import '../../../provider/global.dart';
+import '../../../provider/general_provider.dart';
+import '../../payment/payment_complete.dart';
 
 class BtnConfirmOrder extends ConsumerWidget {
   const BtnConfirmOrder(this.price);

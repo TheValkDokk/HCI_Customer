@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hci_customer/settings.dart';
 
-import '../models/drugs.dart';
-import '../widgets/product_tile.dart';
+import '../../models/drugs.dart';
+import 'product_tile.dart';
 
 class LoadMoreScreen extends StatefulWidget {
   const LoadMoreScreen({

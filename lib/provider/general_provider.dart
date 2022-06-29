@@ -4,11 +4,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/cart.dart';
 import '../models/user.dart';
-import '../screens/drawer.dart';
+import '../screens/Home/components/drawer.dart';
 
 final googleSignInProvider = StateProvider((_) => GoogleSignIn());
-final pharmacyUserProvider =
-    StateProvider((_) => PharmacyUser(mail: '', name: '', phone: '', addr: ''));
+final pharmacyUserProvider = StateProvider((_) => PharmacyUser(
+    mail: '', name: '', phone: '', addr: '', imgUrl: '', role: 'USER'));
 
 final cartLProvider =
     StateNotifierProvider<CartListNotifier, List<Cart>>((ref) {

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
-import '../widgets/flip_stock.dart';
+import '../../widgets/flip_stock.dart';
 
 class AboutUs {
   final String name;

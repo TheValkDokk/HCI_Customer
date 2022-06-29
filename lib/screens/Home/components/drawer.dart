@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:hci_customer/models/global.dart';
+import 'package:hci_customer/provider/global.dart';
 
-import '../icons/my_flutter_app_icons.dart';
-import '../main.dart';
-import '../provider/general_provider.dart';
+import '../../../icons/my_flutter_app_icons.dart';
+import '../../../main.dart';
+import '../../../provider/general_provider.dart';
 
 class MenuItemDra {
   final String title;

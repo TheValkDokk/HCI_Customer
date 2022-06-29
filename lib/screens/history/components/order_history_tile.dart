@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/order.dart';
+import '../../../models/order.dart';
 
 class OrderHistoryTile extends StatelessWidget {
   const OrderHistoryTile(this.order);

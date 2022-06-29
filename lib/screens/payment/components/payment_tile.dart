@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../provider/general_provider.dart';
+import '../../../provider/general_provider.dart';
 
 class PaymentTile extends ConsumerWidget {
   const PaymentTile(this.i);

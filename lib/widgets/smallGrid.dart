@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import '../models/drugs.dart';
-import 'product_tile.dart';
+import '../screens/detail/product_tile.dart';
 
 class buildSmallGrid extends StatelessWidget {
   const buildSmallGrid(this.isPhone, this.list);

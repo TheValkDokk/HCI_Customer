@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hci_customer/screens/home.dart';
+import 'package:hci_customer/screens/Home/home.dart';
 
-import '../models/drugs.dart';
-import '../models/global.dart';
-import '../widgets/product_tile.dart';
-import 'cart_screen.dart';
-import 'nearby.dart';
+import '../../models/drugs.dart';
+import '../../provider/global.dart';
+import 'product_tile.dart';
+import '../cart/cart_screen.dart';
+import '../about/nearby.dart';
 
 class InfoScreen extends ConsumerWidget {
   const InfoScreen(this._drug);

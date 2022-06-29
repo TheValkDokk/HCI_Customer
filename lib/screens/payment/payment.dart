@@ -5,10 +5,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hci_customer/widgets/remove_all_dialog.dart';
 import 'package:string_validator/string_validator.dart';
 
-import '../models/cart.dart';
-import '../provider/general_provider.dart';
-import '../widgets/btnConfirmOrder.dart';
-import '../widgets/payment_tile.dart';
+import '../../models/cart.dart';
+import '../../provider/general_provider.dart';
+import '../cart/components/btnConfirmOrder.dart';
+import 'components/payment_tile.dart';
 
 final isFilledProvider = StateProvider((_) => false);
 
@@ -49,7 +49,6 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
     nameCtl.addListener(() {
       ref.read(pharmacyUserProvider.notifier).state.name = nameCtl.text;
-
       isFilledFunc();
     });
     phoneCtl.addListener(() {

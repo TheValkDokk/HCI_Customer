@@ -4,13 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hci_customer/models/global.dart';
+import 'package:hci_customer/provider/global.dart';
 import 'package:hci_customer/models/prescription.dart';
 import 'package:hci_customer/provider/general_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../screens/payment_complete.dart';
-import '../screens/presciption_screen.dart';
+import '../payment/payment_complete.dart';
+import 'presciption_screen.dart';
 
 class PrescriptionInfo extends ConsumerStatefulWidget {
   const PrescriptionInfo();

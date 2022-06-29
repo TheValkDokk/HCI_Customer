@@ -5,13 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hci_customer/screens/drawer.dart';
-import 'package:hci_customer/screens/order_history.dart';
+import 'package:hci_customer/screens/Home/components/drawer.dart';
+import 'package:hci_customer/screens/order_history/order_history.dart';
 
-import '../provider/general_provider.dart';
-import 'about.dart';
-import 'home.dart';
-import 'prescription_histoy.dart';
+import '../../../provider/general_provider.dart';
+import '../../about/about.dart';
+import '../home.dart';
+import '../home.dart';
+import '../../history/prescription_histoy.dart';
 
 class HomeDrawer extends ConsumerStatefulWidget {
   const HomeDrawer();

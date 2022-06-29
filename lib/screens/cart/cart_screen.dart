@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:hci_customer/screens/payment.dart';
+import 'package:hci_customer/screens/payment/payment.dart';
 import 'package:intl/intl.dart';
 
-import '../provider/general_provider.dart';
-import '../widgets/cart_tile.dart';
+import '../../provider/general_provider.dart';
+import 'components/cart_tile.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen();

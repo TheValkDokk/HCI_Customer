@@ -1,16 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hci_customer/models/user.dart';
-import 'package:hci_customer/screens/nearby.dart';
-import 'package:hci_customer/screens/payment.dart';
+import 'package:hci_customer/screens/Home/home.dart';
+import 'package:hci_customer/screens/about/nearby.dart';
+import 'package:hci_customer/screens/payment/payment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
-import 'provider/general_provider.dart';
-import 'screens/home_drawer.dart';
-import 'screens/login_sceen.dart';
+import 'screens/Home/components/home_drawer.dart';
+import 'screens/login/login_sceen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +40,7 @@ class MyApp extends StatelessWidget {
         PaymentScreen.routeName: (context) => const PaymentScreen(),
         MyApp.routeName: (context) => const MyApp(),
         NearbyStoreScreen.routeName: (context) => const NearbyStoreScreen(),
+        HomeScreen.routeName: (context) => HomeScreen(),
       },
       home: const MainAppBuilder(),
     );
@@ -56,36 +55,6 @@ class MainAppBuilder extends ConsumerStatefulWidget {
 }
 
 class _MainAppBuilderState extends ConsumerState<MainAppBuilder> {
-  final db = FirebaseFirestore.instance;
-
-  Future<void> sendUser() async {
-    final u = FirebaseAuth.instance.currentUser!;
-    final phone = u.phoneNumber ?? 0;
-    print(u.displayName);
-    var user = PharmacyUser(
-        mail: u.email,
-        name: u.displayName,
-        phone: phone.toString(),
-        addr: 'user home');
-    checkExist(user);
-  }
-
-  Future<void> checkExist(PharmacyUser u) async {
-    final userCollection = db.collection('users');
-    await userCollection.get().then((value) {
-      for (var e in value.docs) {
-        if (e.data()['mail'] == u.mail) {
-          userCollection.doc(u.mail).get().then((doc) {
-            u = ref.read(pharmacyUserProvider.notifier).state =
-                PharmacyUser.fromFirestore(doc);
-          });
-          return;
-        }
-      }
-      userCollection.doc(u.mail).set(u.toFirestore());
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -94,7 +63,6 @@ class _MainAppBuilderState extends ConsumerState<MainAppBuilder> {
         if (snap.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snap.hasData) {
-          sendUser();
           return const HomeDrawer();
         } else {
           return const LoginScreen();

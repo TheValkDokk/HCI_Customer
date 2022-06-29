@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:hci_customer/models/global.dart';
+import 'package:hci_customer/provider/global.dart';
 
-import '../models/order.dart';
-import '../widgets/order_history_tile.dart';
+import '../../models/order.dart';
+import '../history/components/order_history_tile.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({Key? key}) : super(key: key);

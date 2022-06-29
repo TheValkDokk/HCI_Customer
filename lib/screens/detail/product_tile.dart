@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hci_customer/screens/info.dart';
+import 'package:hci_customer/screens/detail/info.dart';
 
-import '../models/drugs.dart';
-import '../models/global.dart';
+import '../../models/drugs.dart';
+import '../../provider/global.dart';
 
 class DrugTile extends StatelessWidget {
   const DrugTile(this._drug);
@@ -39,15 +39,12 @@ class DrugTile extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: Hero(
-                        tag: _drug.id,
-                        child: Image.network(
-                          _drug.imgUrl,
-                          height: 100,
-                          cacheHeight: 500,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        ),
+                      child: Image.network(
+                        _drug.imgUrl,
+                        height: 100,
+                        cacheHeight: 500,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
                       ),
                     ),
                     Align(

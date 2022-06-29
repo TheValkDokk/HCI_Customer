@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hci_customer/widgets/camera_container.dart';
+import 'package:hci_customer/screens/prescription/camera_container.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../widgets/PresciprtionInfo.dart';
+import 'PresciprtionInfo.dart';
 
 final ImgPath = StateProvider(((ref) => XFile('')));
 

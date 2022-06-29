@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../provider/general_provider.dart';
-import '../screens/info.dart';
-import 'flip_stock.dart';
+import '../../../provider/general_provider.dart';
+import '../../detail/info.dart';
+import '../../../widgets/flip_stock.dart';
 
 class CartTile extends ConsumerWidget {
   CartTile(this.index);
@@ -75,7 +75,7 @@ class CartTile extends ConsumerWidget {
                         ),
                       ),
                       TextSpan(
-                        text: " ${cart.drug.rating}",
+                        text: " ${cart.drug.rating.toStringAsFixed(1)}",
                         style:
                             const TextStyle(color: Colors.black, fontSize: 16),
                       ),

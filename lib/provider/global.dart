@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hci_customer/models/user.dart';
 import 'package:intl/intl.dart';
 
-import '../provider/general_provider.dart';
-import '../screens/cart_screen.dart';
-import '../screens/presciption_screen.dart';
-import 'cart.dart';
-import 'drugs.dart';
-import 'order.dart';
+import 'general_provider.dart';
+import '../screens/cart/cart_screen.dart';
+import '../screens/prescription/presciption_screen.dart';
+import '../models/cart.dart';
+import '../models/drugs.dart';
+import '../models/order.dart';
 
 var formatter = NumberFormat('###,###');
 final db = FirebaseFirestore.instance;
@@ -79,4 +80,34 @@ void wipeData(WidgetRef ref) {
   ref.invalidate(ScreenProvider);
   ref.invalidate(pharmacyUserProvider);
   ref.invalidate(ImgPath);
+}
+
+saveUser() async {
+  String addr = '';
+  String phone = '';
+  String role = 'USER';
+  final db = FirebaseFirestore.instance;
+  final fUser = FirebaseAuth.instance.currentUser!;
+  try {
+    await db
+        .collection('users')
+        .where('mail', isEqualTo: fUser.email)
+        .get()
+        .then((value) {
+      addr = value.docs.first.data()['addr'];
+      phone = value.docs.first.data()['phone'];
+      role = value.docs.first.data()['role'];
+    });
+  } catch (e) {}
+  PharmacyUser user = PharmacyUser(
+      mail: fUser.email,
+      name: fUser.displayName,
+      imgUrl: fUser.photoURL,
+      role: role == 'USER' ? 'USER' : role,
+      phone: phone == '' ? '' : phone,
+      addr: addr == '' ? '' : addr);
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.mail)
+      .set(user.toMap());
 }

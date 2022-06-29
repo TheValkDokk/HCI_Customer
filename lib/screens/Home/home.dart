@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/category.dart';
-import '../models/drugs.dart';
-import '../widgets/btnDrug.dart';
-import '../widgets/home_appbar.dart';
-import '../widgets/smallGrid.dart';
-import 'load_more.dart';
-import 'search_dialog.dart';
+import '../../models/category.dart';
+import '../../models/drugs.dart';
+import '../../widgets/btnDrug.dart';
+import 'components/home_appbar.dart';
+import '../../widgets/smallGrid.dart';
+import '../detail/load_more.dart';
+import '../search_dialog.dart';
 
 final listDrugDataProvider = StateProvider<List<Drug>>((_) => []);
 

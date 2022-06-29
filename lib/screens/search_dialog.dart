@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hci_customer/screens/home.dart';
+import 'package:hci_customer/screens/Home/home.dart';
 import 'package:searchfield/searchfield.dart';
 
 import '../models/drugs.dart';
-import 'info.dart';
+import 'detail/info.dart';
 
 class SearchDialog extends ConsumerStatefulWidget {
   const SearchDialog({

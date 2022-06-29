@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:hci_customer/models/global.dart';
+import 'package:hci_customer/provider/global.dart';
 import 'package:hci_customer/models/prescription.dart';
 
-import '../widgets/prescription_history_tile.dart';
+import 'components/prescription_history_tile.dart';
 
 class PresciptionHistoryScree extends StatefulWidget {
   const PresciptionHistoryScree({Key? key}) : super(key: key);

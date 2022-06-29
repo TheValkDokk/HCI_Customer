@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hci_customer/screens/home.dart';
-import 'package:hci_customer/screens/presciption_screen.dart';
+import 'package:hci_customer/screens/Home/home.dart';
+import 'package:hci_customer/screens/prescription/presciption_screen.dart';
 
 import '../models/category.dart';
 import '../models/drugs.dart';
-import '../screens/load_more.dart';
+import '../screens/detail/load_more.dart';
 
 class ButtonDrug extends ConsumerWidget {
   const ButtonDrug(this.cat);

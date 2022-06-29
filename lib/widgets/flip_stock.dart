@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hci_customer/icons/my_flutter_app_icons.dart';
 
 class FlipStock extends StatefulWidget {
   const FlipStock({Key? key}) : super(key: key);
@@ -29,9 +30,10 @@ class _FlipStockState extends State<FlipStock>
   @override
   Widget build(BuildContext context) {
     return RotationTransition(
-      turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
-      child: Image.network(
-          'https://www.nhathuocankhang.com/images/newversion/home/icon_Thuoc.png'),
-    );
+        turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+        child: const Icon(
+          MyFlutterApp.capsules,
+          color: Colors.green,
+        ));
   }
 }
